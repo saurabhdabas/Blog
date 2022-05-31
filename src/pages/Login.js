@@ -8,8 +8,7 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import { auth, provider } from '../firebase-config';
 import { signInWithPopup } from 'firebase/auth';
-
-const Login = ({setIsAuth}) => {
+const Login = () => {
 
   let navigate = useNavigate();
 
@@ -17,12 +16,18 @@ const Login = ({setIsAuth}) => {
     event.preventDefault();
     signInWithPopup(auth, provider)
     .then((res)=>{
-      console.log(res);
-      localStorage.setItem("IsAuth", true);
-      setIsAuth(true);
-      navigate('/');
+      console.log(res.user);
+      localStorage.setItem("user",
+       JSON.stringify({ 
+         isLoggedIn: true,
+         name: res.user.displayName,
+         photo:res.user.photoURL,
+         email:res.user.email
+       }));
+      navigate('/home');
     })
   }
+
 
 
   // Styling for Submit Button
@@ -79,7 +84,6 @@ const Login = ({setIsAuth}) => {
         alignItems = "center"
         padding={3}
         justifyContent="space-around"
-        // boxShadow="rgba(0, 0, 0, 0.24) 0px 3px 8px"
         borderRadius={5}
         sx={{
           '& .MuiTextField-root': { m: 1, width: '25ch' },
