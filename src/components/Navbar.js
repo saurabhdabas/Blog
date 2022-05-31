@@ -22,10 +22,12 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 
-
 import { Link } from 'react-router-dom';
 
-const drawerWidth = 200;
+import { auth } from '../firebase-config';
+import { signOut } from 'firebase/auth';
+
+const drawerWidth = 230;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -74,8 +76,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
-    backgroundColor: '#44b700',
-    color: '#44b700',
+    backgroundColor: '#1976d2',
+    color: '#1976d2',
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
@@ -112,6 +114,14 @@ export default function Navbar() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const user = JSON.parse(localStorage.getItem('user'));;
+  
+  const signOutUser = () => {
+    signOut(auth).then((res)=>{
+      console.log("res:",res);
+      localStorage.clear();
+    })
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -127,8 +137,8 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Blog
+          <Typography variant="h6" noWrap component="div" fontFamily="'Raleway', sans-serif">
+            Welcome back !
           </Typography>
         </Toolbar>
       </AppBar>
@@ -151,9 +161,9 @@ export default function Navbar() {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             variant="dot"
           >
-            <Avatar alt="Remy Sharp" src="saurabh.jpg" />
+            <Avatar alt={user.name} src={user.photo} />
           </StyledBadge>
-          <Typography>Saurabh</Typography>
+          <Typography fontFamily="'Raleway', sans-serif" ml={2}>{user.name}</Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
@@ -161,26 +171,38 @@ export default function Navbar() {
         <Divider />
         <List>
             <ListItem key="1">
-              <Link to="/" style={{ textDecoration: 'none' }} >
+              <Link to="/home" style={{ textDecoration: 'none' }} >
                 <ListItemButton>
-                  <ListItemIcon><HomeIcon/></ListItemIcon>
-                  <ListItemText primary= "Home" />
+                  <ListItemIcon><HomeIcon sx={{color:"#1976d2"}}/></ListItemIcon>
+                  <ListItemText primary= { 
+                    <Typography variant="h7" fontFamily="'Raleway', sans-serif" style={{ color: "black" }}>
+                      Home
+                    </Typography>}
+                  />
                 </ListItemButton>
               </Link>
             </ListItem>
             <ListItem key="2">
               <Link to="/Create" style={{ textDecoration: 'none' }} >
                 <ListItemButton>
-                  <ListItemIcon><CreateIcon/></ListItemIcon>
-                  <ListItemText primary= "Write a Post" />
+                  <ListItemIcon><CreateIcon sx={{color:"#1976d2"}}/></ListItemIcon>
+                  <ListItemText primary= { 
+                    <Typography variant="h7" fontFamily="'Raleway', sans-serif" style={{ color: "black" }}>
+                      Write a Post
+                    </Typography>}
+                  />
                 </ListItemButton>
               </Link>
             </ListItem>
-            <ListItem key="3">
-              <Link to="/login" style={{ textDecoration: 'none' }} >
+            <ListItem key="3" onClick={signOutUser}>
+              <Link to="/" style={{ textDecoration: 'none' }} >
                 <ListItemButton>
-                  <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-                  <ListItemText primary= "Logout" />
+                  <ListItemIcon><ExitToAppIcon sx={{color:"#1976d2"}}/></ListItemIcon>
+                  <ListItemText primary= { 
+                    <Typography variant="h7" fontFamily="'Raleway', sans-serif" style={{ color: "black" }}>
+                      Logout
+                    </Typography>}
+                  />
                 </ListItemButton>
               </Link>
             </ListItem>
