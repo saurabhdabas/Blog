@@ -1,68 +1,27 @@
-import {React,useState} from 'react';
-import { useNavigate } from 'react-router';
+import {React} from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
-// import axios from 'axios';
+import { auth, provider } from '../firebase-config';
+import { signInWithPopup } from 'firebase/auth';
 
-const Login = () => {
-
-  const [values, setValues] = useState({
-    email : '',
-    password: '',
-    img:'',
-    showPassword: false,
-  });
-
-  const handleEmail = (event) => {
-    
-    setValues({
-      ...values ,
-      email: event.target.value
-    });
-  };
-  const handlePassword = (event) => {
-
-    setValues({
-      ...values ,
-      password: event.target.value
-    });
-  };
-  // console.log("values:",values);
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+const Login = ({setIsAuth}) => {
 
   let navigate = useNavigate();
+
   const submitHandler = (event) => {
     event.preventDefault();
-    
-    // axios.put(`http://localhost:8081/user-data`, {data: values}).then((response)=> {
-    //   console.log("email:",response.data.email);
-    //   console.log("password:",response.data.password);
-    //   if(response.data.email && response.data.password){
-    //     localStorage.setItem('username',JSON.stringify(response.data));
-        
-    //   navigate('/dashboard');
-    //   }
-    // });
+    signInWithPopup(auth, provider)
+    .then((res)=>{
+      console.log(res);
+      localStorage.setItem("IsAuth", true);
+      setIsAuth(true);
+      navigate('/');
+    })
   }
 
 
@@ -105,20 +64,23 @@ const Login = () => {
   });
  
   return (
-<Grid
-  container
-  spacing={0}
-  direction="column"
-  alignItems="center"
-  justifyContent="center"
-  style={{ minHeight: '100vh', backgroundColor:"beige" }}
->
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ minHeight: '100vh', backgroundColor:"#F1F3F4"}}
+    >
       <Box
         component="form"
         display="flex"
         flexDirection="column"
         alignItems = "center"
+        padding={3}
         justifyContent="space-around"
+        // boxShadow="rgba(0, 0, 0, 0.24) 0px 3px 8px"
+        borderRadius={5}
         sx={{
           '& .MuiTextField-root': { m: 1, width: '25ch' },
           height:500
@@ -126,53 +88,31 @@ const Login = () => {
         noValidate
         autoComplete="off"
       >
-        <Typography variant="h6" noWrap component="div" fontFamily="'Oswald', sans-serif">
-          SIGN IN WITH GOOGLE
+        <Typography variant="h6" noWrap component="div" fontSize={36} fontFamily="'Epilogue', sans-serif">
+          Blog - Let Your Imagination Fly 
         </Typography>
         <Avatar
-        alt="Google Logo"
-        src="google.png"
-        sx={{ width: 100, height: 100 }}
+          alt="Google Logo"
+          src="b-logoNew.jpeg"
+          sx={{width:200, height:200, borderRadius:50}}
         />
-
-        <div>
-          <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-email"
-              value={values.email}
-              onChange={handleEmail}
-              label="Email"
-            />
-          </FormControl>
-          <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-password"
-              type={values.showPassword ? 'text' : 'password'}
-              value={values.password}
-              onChange={handlePassword}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
-            />
-          </FormControl>
-        </div>
-        <div>
-          <BootstrapButton sx={{ m: 1, width: '25ch' }} variant="contained" disableRipple onClick={submitHandler}>
-            Login
-          </BootstrapButton>
-        </div>
+        <BootstrapButton 
+        display='inline-flex' 
+        flexDirection='row'
+        alignItems='center' 
+        justifyContent='space-between'  
+        sx={{ m: 1, width: '25ch' }} 
+        variant="contained" 
+        disableRipple 
+        onClick={submitHandler}>
+        <Avatar
+          alt="Google Logo"
+          src="google.png"
+        />
+          <Typography marginLeft={2} fontFamily="'Epilogue', sans-serif">
+            Sign In With Google
+          </Typography>
+        </BootstrapButton>
       </Box>
     </Grid>
   );  
