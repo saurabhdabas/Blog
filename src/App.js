@@ -1,16 +1,13 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import CreatePost from './pages/CreatePost';
 import Login from './pages/Login';
 function App() {
   return (
     <Router>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/create">Write a post</Link>
-        <Link to="login">Login</Link>
-      </nav>
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/create" element={<CreatePost/>}/>
