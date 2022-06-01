@@ -161,7 +161,9 @@ function CreatePost() {
           />
             <label htmlFor="select-image">
               <Button variant="contained" color="primary" component="span">
-                Upload Image
+                <Typography  fontFamily="'Raleway', sans-serif">
+                  Upload Image
+                </Typography>
               </Button>
             </label>
             {imageUrl && image && (
