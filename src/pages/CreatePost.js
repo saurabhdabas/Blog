@@ -173,26 +173,7 @@ function CreatePost() {
               </Box>
             )}
         </>
-          {/* <Box
-            display="flex"
-            direction="row" 
-            alignItems="center"
-            justifyContent='center'
-            borderRadius={2}
-            sx={{width:800, height:200, backgroundColor:"#343434"}}
-          >
-            <input 
-              accept="image/*" 
-              type="file" 
-              id="select-image"
-              style={{ display: 'none' }}
-              onClick={handleImageChange}
-            />
-            <label htmlFor="select-image">
-              <AddCircleOutlineIcon sx={{color:"#F1F3F4", width:80, height:80}} cursor="pointer"/>
-            </label>
-            <img src={imageUrl} alt={image ? image.name : "uploadedImage"} height="100px" />
-          </Box> */}
+
           <Box
             component="form"
             sx={{width:800, marginTop:5, marginBottom:5}}
