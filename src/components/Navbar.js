@@ -117,8 +117,7 @@ export default function Navbar() {
   const user = JSON.parse(localStorage.getItem('user'));;
   
   const signOutUser = () => {
-    signOut(auth).then((res)=>{
-      console.log("res:",res);
+    signOut(auth).then(()=>{
       localStorage.clear();
     })
   }
