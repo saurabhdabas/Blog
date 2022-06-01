@@ -100,7 +100,7 @@ const Login = () => {
         />
         <BootstrapButton 
         display='inline-flex' 
-        flexDirection='row'
+        direction='row'
         alignItems='center' 
         justifyContent='space-between'  
         sx={{ m: 1, width: '25ch' }} 
