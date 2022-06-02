@@ -1,8 +1,10 @@
 import { React,useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Grid, Box, Typography, Avatar, Chip, Stack, Paper } from  '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../components/Navbar';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../firebase-config';
@@ -24,7 +26,14 @@ const Post = () => {
   const user = JSON.parse(localStorage.getItem('user'));
 
   const { id } = useParams();
- 
+
+  // Handle Navigation
+  let navigate = useNavigate();
+
+  const handleNavigation = () => {
+    navigate(-1);
+  }
+
   const posts = postsList.map((post)=> {
     // Handle Post Likes
     const handleLikes = () => {
@@ -58,10 +67,19 @@ const Post = () => {
           padding={3}
           justifyContent="space-around"
           borderRadius={5}
-          
         >
-          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" sx={{ textTransform: 'uppercase' }}>
+          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" sx={{ textTransform: 'uppercase'}}>
             {post.title}
+            <Chip 
+            color="primary" 
+            icon={<HomeIcon  cursor="pointer"/>}
+            label={
+              <Typography variant="h6" noWrap component="div" fontSize={16} fontFamily="'Raleway', sans-serif">
+              Home
+              </Typography>
+              } 
+            onClick = {handleNavigation} 
+          />
           </Typography>
           
           <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:"100%", marginTop:5, marginBottom:5}}>
