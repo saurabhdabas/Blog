@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 import { getDocs, collection } from 'firebase/firestore';
+import { doc, deleteDoc } from "firebase/firestore";
 import { db } from '../firebase-config';
 
 import Box from '@mui/material/Box';
@@ -16,10 +17,10 @@ import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+
 import ShareIcon from '@mui/icons-material/Share';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import PageviewIcon from '@mui/icons-material/Pageview';
 const Home = () => {
 
   const [postsList, setPostsList] = useState([]);
@@ -30,7 +31,6 @@ const Home = () => {
       setPostsList(res.docs.map((doc)=>({...doc.data(), id: doc.id})));
     })
   },[])
-  console.log("postsList:",postsList);
 
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
@@ -41,14 +41,24 @@ const Home = () => {
   };
 
   let navigate = useNavigate();
-
-  const handlePostRedirect = () => {
-    navigate("/posts")
-  }
-
+  
   const posts = postsList.map((post)=>{
+    // Redirects to posts page
+    const handlePostRedirect = (event) => {
+      console.log(event)
+      navigate(`/posts/${post.id}`)
+    }
+
+    // Delete the post when clicked
+    const handlePostDelete = () => {
+      deleteDoc(doc(db, "posts", post.id))
+      .then(()=>{
+        console.log("deleted");
+      })
+    }
+
     return (
-      <Card sx={{ width: 350, height:350}} key={post.id} onClick={handlePostRedirect}>
+      <Card sx={{ width: 350, height:350}} key={post.id}>
         <CardHeader
           title=
           {
@@ -84,23 +94,22 @@ const Home = () => {
           sx={{padding:2}}
         />
         <CardActions disableSpacing>
-          <Stack direction="row" spacing={32}>
-            {/* <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton> */}
+          <Stack direction="row" spacing={13}>
             <IconButton aria-label="share" sx={{color:"#1976d2"}}>
               <ShareIcon onClick={handleUrlShare}/>
             </IconButton>
+            <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}}>
+              <PageviewIcon  onClick={handlePostRedirect}/>
+            </IconButton>
             <IconButton aria-label="delete" sx={{color:"#1976d2"}}>
-              <DeleteIcon />
+              <DeleteIcon  onClick = {handlePostDelete}/>
             </IconButton>
           </Stack>
         </CardActions>
+
       </Card>
     );
   });
-
-
 
   return (
     <Grid style={{ minHeight: '100vh', backgroundColor: "#F1F3F4" }}>
