@@ -1,6 +1,6 @@
 import { React,useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Box, Typography, Avatar, Chip, Stack } from  '@mui/material';
+import { Grid, Box, Typography, Avatar, Chip, Stack, Paper } from  '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import Navbar from '../components/Navbar';
@@ -49,6 +49,7 @@ const Post = () => {
         justifyContent="start"
         
       >
+        <Paper elevation={3} sx={{width:1000, marginTop:15, marginBottom:15, backgroundColor:"#FFFFFF"}}>
         <Box
           component="form"
           display="flex"
@@ -57,7 +58,7 @@ const Post = () => {
           padding={3}
           justifyContent="space-around"
           borderRadius={5}
-          sx={{width:1000, marginTop:15, marginBottom:15, backgroundColor:"#F9F9F9"}}
+          
         >
           <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif">
             {post.title}
@@ -114,6 +115,7 @@ const Post = () => {
             />
           </Stack>
         </Box>
+        </Paper>
       </Grid>
     </div>
   )
@@ -122,6 +124,7 @@ const Post = () => {
   return (
     <Grid style={{ minHeight: '100vh', backgroundColor: "#F1F3F4" }}>
       <Navbar/>
+      
       <Box>
         {posts}
       </Box>
