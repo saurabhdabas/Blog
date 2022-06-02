@@ -34,7 +34,7 @@ const Home = () => {
 
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
-
+  
   // Copy the window Url to share
   const handleUrlShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -44,17 +44,19 @@ const Home = () => {
   
   const posts = postsList.map((post)=>{
     // Redirects to posts page
-    const handlePostRedirect = (event) => {
-      console.log(event)
+    const handlePostRedirect = () => {
+
       navigate(`/posts/${post.id}`)
     }
-
+    console.log(post);
     // Delete the post when clicked
     const handlePostDelete = () => {
-      deleteDoc(doc(db, "posts", post.id))
-      .then(()=>{
-        console.log("deleted");
-      })
+      if(post.author.email === user.email) {
+        deleteDoc(doc(db, "posts", post.id))
+        .then(()=>{
+          console.log("deleted");
+        })
+      }
     }
 
     return (
@@ -101,9 +103,13 @@ const Home = () => {
             <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}}>
               <PageviewIcon  onClick={handlePostRedirect}/>
             </IconButton>
+            {post.author.email === user.email ?
             <IconButton aria-label="delete" sx={{color:"#1976d2"}}>
               <DeleteIcon  onClick = {handlePostDelete}/>
-            </IconButton>
+            </IconButton> : 
+            ""
+            }
+
           </Stack>
         </CardActions>
 
