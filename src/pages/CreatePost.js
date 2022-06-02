@@ -6,7 +6,10 @@ import { styled } from '@mui/material/styles';
 import PublishIcon from '@mui/icons-material/Publish';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth } from '../firebase-config';
-import today from '../helpers/DateConversion';
+import moment from 'moment';
+
+
+// import today from '../helpers/DateConversion';
 
 
 function CreatePost() {
@@ -36,9 +39,10 @@ function CreatePost() {
       setImageUrl(URL.createObjectURL(image));
     }
   }, [image]);
+  console.log("imageURL:", imageUrl);
 
   // Retrieving user Info from local Storage
-  const user = JSON.parse(localStorage.getItem('user'));;
+  const user = JSON.parse(localStorage.getItem('user'));
 
   // Reference posts table created in firestore database
 
@@ -46,13 +50,13 @@ function CreatePost() {
 
   let navigate = useNavigate();
 
-
   const submitHandler = (event) => {
     event.preventDefault();
     addDoc(postsCollectionRef, { 
       title : title,
       imageSrc : imageUrl,
       content: content,
+      publishDate:moment(new Date()).format('MMMM d, YYYY'),
       author: {name:auth.currentUser.displayName, id:auth.currentUser.uid}
      })
     .then((res)=>{
@@ -126,7 +130,7 @@ function CreatePost() {
           
           <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:800, marginTop:5, marginBottom:5}}>
             <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
-              Published on : {today}
+              Publish on : {moment(new Date()).format('MMMM d, YYYY')} 
             </Typography>
             <Chip
               avatar={<Avatar alt={user.name} src={user.photo} />}
