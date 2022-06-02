@@ -1,13 +1,16 @@
 import { React,useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Box, Typography, Avatar, Chip } from  '@mui/material';
+import { Grid, Box, Typography, Avatar, Chip, Stack } from  '@mui/material';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import Navbar from '../components/Navbar';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../firebase-config';
 
 
 const Post = () => {
-
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
   const [postsList, setPostsList] = useState([]);
   const postsCollectionRef = collection( db, "posts");
 
@@ -23,17 +26,28 @@ const Post = () => {
   const { id } = useParams();
  
   const posts = postsList.map((post)=> {
+    // Handle Post Likes
+    const handleLikes = () => {
+      if(post.author.email !== user.email) {
+        setLikes(likes + 1);
+      }
+    }
+    const handleDislikes = () => {
+      if(post.author.email !== user.email) {
+        setDislikes(dislikes + 1);
+      }
+    }
     if(post.id === id) {
       console.log("article:",post)
        return (
     <div>
       <Grid
         container
-        spacing={0}
+        // spacing={0}
         direction="column"
         alignItems="center"
         justifyContent="start"
-        style={{ minHeight: '100vh', backgroundColor: "#F1F3F4" }}
+        
       >
         <Box
           component="form"
@@ -43,15 +57,15 @@ const Post = () => {
           padding={3}
           justifyContent="space-around"
           borderRadius={5}
-          sx={{width:1000, marginTop:15, marginBottom:15}}
+          sx={{width:1000, marginTop:15, marginBottom:15, backgroundColor:"#F9F9F9"}}
         >
-          <Typography variant="h6" noWrap component="div" fontSize={26}        fontFamily="'Raleway', sans-serif">
+          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif">
             {post.title}
           </Typography>
           
-          <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:900, marginTop:5, marginBottom:5}}>
+          <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:"100%", marginTop:5, marginBottom:5}}>
             <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
-              Published on : {post.publishDate}
+              {post.publishDate}
             </Typography>
             <Chip
               avatar={<Avatar alt={post.author.name} src={user.photo} />}
@@ -74,6 +88,31 @@ const Post = () => {
           >
             {post.content}            
           </Box>
+
+          <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%'}}>
+            <Chip 
+              color="primary" 
+              icon={<ThumbUpIcon 
+              cursor="pointer"/>} 
+              label={
+                <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif">
+                {likes}
+                </Typography>
+                } 
+              onClick={handleLikes}
+            />
+            <Chip 
+              color="primary" 
+              icon={<ThumbDownIcon 
+              cursor="pointer"/>} 
+              label={
+                <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif">
+                {dislikes}
+                </Typography>
+                } 
+              onClick={handleDislikes}
+            />
+          </Stack>
         </Box>
       </Grid>
     </div>
