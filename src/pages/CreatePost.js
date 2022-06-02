@@ -8,10 +8,6 @@ import { addDoc, collection } from 'firebase/firestore';
 import { db, auth } from '../firebase-config';
 import moment from 'moment';
 
-
-// import today from '../helpers/DateConversion';
-
-
 function CreatePost() {
 
   // handle TextField Changes by user Input
