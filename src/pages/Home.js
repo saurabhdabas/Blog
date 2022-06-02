@@ -91,9 +91,9 @@ const Home = () => {
         <CardMedia
           component="img"
           height="194"
-          image="/google.png"
+          image={!post.imgSrc ? "/NoImage.png" : "" }
           alt={post.title}
-          sx={{padding:2}}
+          sx={{padding:1}}
         />
         <CardActions disableSpacing>
           <Stack direction="row" spacing={13}>
