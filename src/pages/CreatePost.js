@@ -35,7 +35,7 @@ function CreatePost() {
       setImageUrl(URL.createObjectURL(image));
     }
   }, [image]);
-  console.log("imageURL:", imageUrl);
+  
 
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
