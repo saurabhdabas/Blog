@@ -17,6 +17,7 @@ import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 import ShareIcon from '@mui/icons-material/Share';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -97,19 +98,24 @@ const Home = () => {
         />
         <CardActions disableSpacing>
           <Stack direction="row" spacing={13}>
+          <Tooltip title="Share" placement="bottom">
             <IconButton aria-label="share" sx={{color:"#1976d2"}}>
               <ShareIcon onClick={handleUrlShare}/>
             </IconButton>
+            </Tooltip>
+            <Tooltip title="View" placement="bottom">
             <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}}>
               <PageviewIcon  onClick={handlePostRedirect}/>
             </IconButton>
+            </Tooltip>
             {post.author.email === user.email ?
+            <Tooltip title="Delete" placement="bottom">
             <IconButton aria-label="delete" sx={{color:"#1976d2"}}>
               <DeleteIcon  onClick = {handlePostDelete}/>
-            </IconButton> : 
+            </IconButton>
+            </Tooltip> : 
             ""
             }
-
           </Stack>
         </CardActions>
 
