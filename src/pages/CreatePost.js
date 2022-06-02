@@ -39,7 +39,6 @@ function CreatePost() {
 
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
-
   // Reference posts table created in firestore database
 
   const postsCollectionRef = collection( db, "posts");
@@ -53,7 +52,7 @@ function CreatePost() {
       imageSrc : imageUrl,
       content: content,
       publishDate:moment(new Date()).format('MMMM d, YYYY'),
-      author: {name:auth.currentUser.displayName, id:auth.currentUser.uid}
+      author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email}
      })
     .then((res)=>{
       console.log("res:",res);
