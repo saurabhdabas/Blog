@@ -60,7 +60,7 @@ const Post = () => {
           borderRadius={5}
           
         >
-          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif">
+          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" sx={{ textTransform: 'uppercase' }}>
             {post.title}
           </Typography>
           
