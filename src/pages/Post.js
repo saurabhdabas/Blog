@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Grid, Box, Typography, Avatar, Chip, Stack, Paper } from  '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../components/Navbar';
 import { getDocs, collection } from 'firebase/firestore';
@@ -13,6 +14,9 @@ import { db } from '../firebase-config';
 const Post = () => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
+
+  
+
   const [postsList, setPostsList] = useState([]);
   const postsCollectionRef = collection( db, "posts");
 
@@ -72,17 +76,12 @@ const Post = () => {
           <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" sx={{ textTransform: 'uppercase'}}>
             {post.title}
           </Typography>
-          <Chip 
-            color="primary"
-            sx={{position:'absolute', left:880, top:30}}
-            icon={<HomeIcon  cursor="pointer"/>}
-            label={
-              <Typography variant="h6" noWrap component="div" fontSize={16} fontFamily="'Raleway', sans-serif">
-              Home
-              </Typography>
-              } 
-            onClick = {handleNavigation} 
-          />
+          <Tooltip title="Home" placement="right">
+            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF",position:'absolute', left:950, top:30}} >
+              <HomeIcon onClick = {handleNavigation}/>
+            </IconButton>
+          </Tooltip>
+
           <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:"100%", marginTop:5, marginBottom:5}}>
             <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
               {post.publishDate}
@@ -110,28 +109,22 @@ const Post = () => {
           </Box>
 
           <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%'}}>
-            <Chip 
-              color="primary" 
-              icon={<ThumbUpIcon 
-              cursor="pointer"/>} 
-              label={
-                <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif">
+          <Tooltip title="Like" placement="right">
+            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}} >
+              <ThumbUpIcon onClick = {handleLikes} cursor="pointer"/>
+              <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif" sx={{color:"#28A745"}}>
                 {likes}
-                </Typography>
-                } 
-              onClick={handleLikes}
-            />
-            <Chip 
-              color="primary" 
-              icon={<ThumbDownIcon 
-              cursor="pointer"/>} 
-              label={
-                <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif">
-                {dislikes}
-                </Typography>
-                } 
-              onClick={handleDislikes}
-            />
+              </Typography>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Dislike" placement="right">
+            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}} >
+              <ThumbDownIcon onClick = {handleDislikes} cursor="pointer"/>
+              <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif" sx={{color:"#DC3545"}}>
+                {likes}
+              </Typography>
+            </IconButton>
+          </Tooltip>
           </Stack>
         </Box>
         </Paper>
