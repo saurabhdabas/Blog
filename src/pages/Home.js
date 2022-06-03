@@ -18,11 +18,14 @@ import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import Snackbar from '@mui/material/Snackbar';
 
 import ShareIcon from '@mui/icons-material/Share';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PageviewIcon from '@mui/icons-material/Pageview';
 const Home = () => {
+
+  const [open, setOpen] = useState(false);
 
   const [postsList, setPostsList] = useState([]);
   const postsCollectionRef = collection( db, "posts");
@@ -39,6 +42,10 @@ const Home = () => {
   // Copy the window Url to share
   const handleUrlShare = () => {
     navigator.clipboard.writeText(window.location.href);
+    setOpen(true);
+    setTimeout(()=>{
+      setOpen(false);
+    },1000)
   };
 
   let navigate = useNavigate();
@@ -61,65 +68,70 @@ const Home = () => {
     }
 
     return (
-      <Card sx={{ width: 350, height:350}} key={post.id}>
-        <CardHeader
-          title=
-          {
-            <Typography variant="h6" textAlign='center' noWrap component="div" fontSize={22} fontFamily="'Raleway', sans-serif">
-            {post.title}
-            </Typography>
-          }
-          subheader=
-          {
-            <Stack direction="row" spacing={5} mt={1} display='flex' justifyContent='space-between' alignItems='center'>
-              <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
-                {post.publishDate}
+      <>
+        <Card sx={{ width: 350, height:350}} key={post.id}>
+          <CardHeader
+            title=
+            {
+              <Typography variant="h6" textAlign='center' noWrap component="div" fontSize={22} fontFamily="'Raleway', sans-serif">
+              {post.title}
               </Typography>
-              
-              <Chip
-              avatar={<Avatar alt={post.author.name} src={user.photo} />}
-              label=
-              {              
-                <Typography variant="h6" noWrap component="div" fontSize={12} fontFamily="'Raleway', sans-serif">
-                {post.author.name}
-                </Typography>
-              }
-              variant="outlined" 
-            />
-            </Stack>
-          }
-        />
-        <CardMedia
-          component="img"
-          height="194"
-          image={!post.imgSrc ? "/NoImage.png" : "" }
-          alt={post.title}
-          sx={{padding:1}}
-        />
-        <CardActions disableSpacing>
-          <Stack direction="row" spacing={13}>
-          <Tooltip title="Share" placement="bottom">
-            <IconButton aria-label="share" sx={{color:"#1976d2"}}>
-              <ShareIcon onClick={handleUrlShare}/>
-            </IconButton>
-            </Tooltip>
-            <Tooltip title="View" placement="bottom">
-            <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}}>
-              <PageviewIcon  onClick={handlePostRedirect}/>
-            </IconButton>
-            </Tooltip>
-            {post.author.email === user.email ?
-            <Tooltip title="Delete" placement="bottom">
-            <IconButton aria-label="delete" sx={{color:"#1976d2"}}>
-              <DeleteIcon  onClick = {handlePostDelete}/>
-            </IconButton>
-            </Tooltip> : 
-            ""
             }
-          </Stack>
-        </CardActions>
-
-      </Card>
+            subheader=
+            {
+              <Stack direction="row" spacing={5} mt={1} display='flex' justifyContent='space-between' alignItems='center'>
+                <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
+                  {post.publishDate}
+                </Typography>
+                
+                <Chip
+                avatar={<Avatar alt={post.author.name} src={user.photo} />}
+                label=
+                {              
+                  <Typography variant="h6" noWrap component="div" fontSize={12} fontFamily="'Raleway', sans-serif">
+                  {post.author.name}
+                  </Typography>
+                }
+                variant="outlined" 
+              />
+              </Stack>
+            }
+          />
+          <CardMedia
+            component="img"
+            height="194"
+            image={!post.imgSrc ? "/NoImage.png" : "" }
+            alt={post.title}
+            sx={{padding:1}}
+          />
+          <CardActions disableSpacing>
+            <Stack direction="row" spacing={13}>
+            <Tooltip title="Share" placement="bottom">
+              <IconButton aria-label="share" sx={{color:"#1976d2"}}>
+                <ShareIcon onClick={handleUrlShare}/>
+              </IconButton>
+              </Tooltip>
+              <Tooltip title="View" placement="bottom">
+              <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}}>
+                <PageviewIcon  onClick={handlePostRedirect}/>
+              </IconButton>
+              </Tooltip>
+              {post.author.email === user.email ?
+              <Tooltip title="Delete" placement="bottom">
+              <IconButton aria-label="delete" sx={{color:"#1976d2"}}>
+                <DeleteIcon  onClick = {handlePostDelete}/>
+              </IconButton>
+              </Tooltip> : 
+              ""
+              }
+            </Stack>
+          </CardActions>
+        </Card>
+        <Snackbar
+          open={open}
+          message="Link Copied"
+        />
+      </>
     );
   });
 
