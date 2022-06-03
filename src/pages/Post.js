@@ -67,11 +67,14 @@ const Post = () => {
           padding={3}
           justifyContent="space-around"
           borderRadius={5}
+          sx={{position:'relative'}}
         >
           <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" sx={{ textTransform: 'uppercase'}}>
             {post.title}
-            <Chip 
-            color="primary" 
+          </Typography>
+          <Chip 
+            color="primary"
+            sx={{position:'absolute', left:880, top:30}}
             icon={<HomeIcon  cursor="pointer"/>}
             label={
               <Typography variant="h6" noWrap component="div" fontSize={16} fontFamily="'Raleway', sans-serif">
@@ -80,8 +83,6 @@ const Post = () => {
               } 
             onClick = {handleNavigation} 
           />
-          </Typography>
-          
           <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:"100%", marginTop:5, marginBottom:5}}>
             <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
               {post.publishDate}
