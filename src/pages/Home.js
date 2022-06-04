@@ -53,10 +53,11 @@ const Home = () => {
   const posts = postsList.map((post)=>{
     // Redirects to posts page
     const handlePostRedirect = () => {
-
       navigate(`/posts/${post.id}`)
     }
-    console.log(post);
+
+    // console.log(post);
+    
     // Delete the post when clicked
     const handlePostDelete = () => {
       if(post.author.email === user.email) {
@@ -73,19 +74,19 @@ const Home = () => {
           <CardHeader
             title=
             {
-              <Typography variant="h6" textAlign='center' noWrap component="div" fontSize={22} fontFamily="'Raleway', sans-serif">
+              <Typography variant="h6" textAlign='center' noWrap component="div" fontSize={22} fontFamily="'Raleway', sans-serif" sx={{width:320}}>
               {post.title}
               </Typography>
             }
             subheader=
             {
-              <Stack direction="row" spacing={5} mt={1} display='flex' justifyContent='space-between' alignItems='center'>
+              <Stack direction="row" spacing={5} mt={1} display='flex' justifyContent='space-between' alignItems='center' sx={{width:320}}>
                 <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
                   {post.publishDate}
                 </Typography>
                 
                 <Chip
-                avatar={<Avatar alt={post.author.name} src={user.photo} />}
+                // avatar={<Avatar alt={post.author.name} src={user.photo} />}
                 label=
                 {              
                   <Typography variant="h6" noWrap component="div" fontSize={12} fontFamily="'Raleway', sans-serif">
@@ -105,7 +106,7 @@ const Home = () => {
             sx={{padding:1}}
           />
           <CardActions disableSpacing>
-            <Stack direction="row" spacing={13}>
+            <Stack direction="row" spacing={14}>
             <Tooltip title="Share" placement="bottom">
               <IconButton aria-label="share" sx={{color:"#1976d2"}}>
                 <ShareIcon onClick={handleUrlShare}/>

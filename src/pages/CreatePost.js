@@ -25,7 +25,7 @@ function CreatePost() {
   // Store the file data
 
   const [image, setImage] = useState(null);
-
+  
   // Display a preview of the image using the URL object
 
   const [imageUrl, setImageUrl] = useState(null);
@@ -36,7 +36,6 @@ function CreatePost() {
     }
   }, [image]);
   
-
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
   // Reference posts table created in firestore database
@@ -47,17 +46,21 @@ function CreatePost() {
 
   const submitHandler = (event) => {
     event.preventDefault();
+    if(title && content) {
     addDoc(postsCollectionRef, { 
       title : title,
       imageSrc : imageUrl,
       content: content,
       publishDate:moment(new Date()).format('MMMM d, YYYY'),
-      author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email}
+      author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email},
+      likes:0,
+      dislikes:0
      })
     .then((res)=>{
       console.log("res:",res);
     })
-    navigate('/home');
+      navigate('/home');
+    }
   };
 
   // Styling for Submit Button
@@ -116,8 +119,6 @@ function CreatePost() {
           justifyContent="space-around"
           borderRadius={5}
           sx={{width:900, marginTop:15, marginBottom:10}}
-          noValidate
-          autoComplete="off"
         >
           <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif">
             Write an Article
@@ -146,6 +147,9 @@ function CreatePost() {
               Title
             </Typography>
             }
+            inputProps={{
+              maxLength: 50,
+            }}
             value={title}
             onChange={handleTitleChange}
             sx={{width:800, marginBottom:5}}
@@ -178,8 +182,6 @@ function CreatePost() {
           <Box
             component="form"
             sx={{width:800, marginTop:5, marginBottom:5}}
-            noValidate
-            autoComplete="off"
           >
             <TextField
               id="outlined-multiline-static"
