@@ -10,12 +10,13 @@ import moment from 'moment';
 
 function CreatePost() {
 
-  // handle TextField Changes by user Input
+  // Handle user's Input for posts's title
   const [title, setTitle] = useState("");
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
   
+  // Handle user's Input for posts's Content
   const [content, setContent] = useState("");
   const handleContentChange = (event) => {
     setContent(event.target.value);
@@ -35,7 +36,7 @@ function CreatePost() {
       setImageUrl(URL.createObjectURL(image));
     }
   }, [image]);
-  
+
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
   // Reference posts table created in firestore database
