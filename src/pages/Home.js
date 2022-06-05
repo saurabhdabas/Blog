@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 import { getDocs, collection } from 'firebase/firestore';
-import { doc, deleteDoc } from "firebase/firestore";
+
 import { db } from '../firebase-config';
 
 import Box from '@mui/material/Box';
@@ -21,13 +21,13 @@ import Tooltip from '@mui/material/Tooltip';
 import Snackbar from '@mui/material/Snackbar';
 
 import ShareIcon from '@mui/icons-material/Share';
-import DeleteIcon from '@mui/icons-material/Delete';
+
 import PageviewIcon from '@mui/icons-material/Pageview';
 const Home = () => {
 
   const [open, setOpen] = useState(false);
-
   const [postsList, setPostsList] = useState([]);
+
   const postsCollectionRef = collection( db, "posts");
 
   useEffect(()=>{
@@ -51,22 +51,12 @@ const Home = () => {
   let navigate = useNavigate();
   
   const posts = postsList.map((post)=>{
+
     // Redirects to posts page
     const handlePostRedirect = () => {
       navigate(`/posts/${post.id}`)
     }
 
-    // console.log(post);
-    
-    // Delete the post when clicked
-    const handlePostDelete = () => {
-      if(post.author.email === user.email) {
-        deleteDoc(doc(db, "posts", post.id))
-        .then(()=>{
-          console.log("deleted");
-        })
-      }
-    }
 
     return (
       <>
@@ -86,7 +76,7 @@ const Home = () => {
                 </Typography>
                 
                 <Chip
-                // avatar={<Avatar alt={post.author.name} src={user.photo} />}
+                avatar={<Avatar alt={post.author.name} src={post.author.img} />}
                 label=
                 {              
                   <Typography variant="h6" noWrap component="div" fontSize={12} fontFamily="'Raleway', sans-serif">
@@ -101,30 +91,22 @@ const Home = () => {
           <CardMedia
             component="img"
             height="194"
-            image={!post.imgSrc ? "/NoImage.png" : "" }
+            image={!post.imageSrc ? "/NoImage.png" : post.imageSrc }
             alt={post.title}
             sx={{padding:1}}
           />
           <CardActions disableSpacing>
-            <Stack direction="row" spacing={14}>
+            <Stack direction="row" spacing={32}>
             <Tooltip title="Share" placement="bottom">
-              <IconButton aria-label="share" sx={{color:"#1976d2"}}>
-                <ShareIcon onClick={handleUrlShare}/>
+              <IconButton aria-label="share" sx={{color:"#1976d2"}} onClick={handleUrlShare}>
+                <ShareIcon />
               </IconButton>
               </Tooltip>
               <Tooltip title="View" placement="bottom">
-              <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}}>
-                <PageviewIcon  onClick={handlePostRedirect}/>
+              <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}} onClick={handlePostRedirect}>
+                <PageviewIcon/>
               </IconButton>
               </Tooltip>
-              {post.author.email === user.email ?
-              <Tooltip title="Delete" placement="bottom">
-              <IconButton aria-label="delete" sx={{color:"#1976d2"}}>
-                <DeleteIcon  onClick = {handlePostDelete}/>
-              </IconButton>
-              </Tooltip> : 
-              ""
-              }
             </Stack>
           </CardActions>
         </Card>
@@ -139,7 +121,6 @@ const Home = () => {
   return (
     <Grid style={{ minHeight: '100vh', backgroundColor: "#F1F3F4" }}>
       <Navbar/>
-      {/* <Post/> */}
       <Box sx={{ display: 'grid',gap: 4, gridTemplateColumns: 'repeat(3, 1fr)', marginTop:15, marginBottom:15, marginLeft:25, marginRight:15 }} >
         {posts}
       </Box>
