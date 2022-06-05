@@ -9,7 +9,7 @@ import { db, auth } from '../firebase-config';
 import moment from 'moment';
 
 function CreatePost() {
-
+  console.log("date:",moment(new Date()).format('MMMM d, YYYY'));
   // Handle user's Input for posts's title
   const [title, setTitle] = useState("");
   const handleTitleChange = (event) => {
@@ -22,9 +22,7 @@ function CreatePost() {
     setContent(event.target.value);
   };
   
-
-  // Store the file data
-
+  // Handle user's Input for posts's Image
   const [image, setImage] = useState(null);
   
   // Display a preview of the image using the URL object
@@ -39,27 +37,24 @@ function CreatePost() {
 
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
+
   // Reference posts table created in firestore database
 
   const postsCollectionRef = collection( db, "posts");
+  
 
   let navigate = useNavigate();
 
   const submitHandler = (event) => {
     event.preventDefault();
     if(title && content) {
-    addDoc(postsCollectionRef, { 
-      title : title,
-      imageSrc : imageUrl,
-      content: content,
-      publishDate:moment(new Date()).format('MMMM d, YYYY'),
-      author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email},
-      likes:0,
-      dislikes:0
-     })
-    .then((res)=>{
-      console.log("res:",res);
-    })
+      addDoc(postsCollectionRef, { 
+        title : title,
+        imageSrc : imageUrl,
+        content: content,
+        publishDate:moment(new Date()).format('MMMM d, YYYY'),
+        author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email, img:auth.currentUser.photoURL}
+       })
       navigate('/home');
     }
   };
@@ -74,18 +69,7 @@ function CreatePost() {
     lineHeight: 1.5,
     backgroundColor: '#0063cc',
     borderColor: '#0063cc',
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
+    // .join(','),
     '&:hover': {
       backgroundColor: '#0069d9',
       borderColor: '#0062cc',
@@ -101,7 +85,7 @@ function CreatePost() {
     },
   });
   return (
-    <div>
+    <Grid>
       <Navbar />
       <Grid
         container
@@ -112,7 +96,7 @@ function CreatePost() {
         style={{ minHeight: '100vh', backgroundColor: "#F1F3F4" }}
       >
         <Box
-          component="form"
+          component="div"
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -175,13 +159,13 @@ function CreatePost() {
                 <Typography fontSize={20} fontFamily="'Raleway', sans-serif">
                 Image Preview
                 </Typography>
-                <img src={imageUrl} alt={image.name} height="500px" width="800px"/>
+                <img src={imageUrl} alt={image.name} height="300px" width="800px"/>
               </Box>
             )}
         </>
 
           <Box
-            component="form"
+            component="div"
             sx={{width:800, marginTop:5, marginBottom:5}}
           >
             <TextField
@@ -200,13 +184,9 @@ function CreatePost() {
             />
           </Box>
           <BootstrapButton
-            display='inline-flex'
             direction='row'
-            alignItems='center'
-            justifyContent='space-between'
             sx={{ m: 1, width: 800 }}
             variant="contained"
-            disableRipple
             onClick={submitHandler}>
             <PublishIcon/>
             <Typography marginLeft={5} fontSize={18} fontFamily="'Raleway', sans-serif">
@@ -215,7 +195,7 @@ function CreatePost() {
           </BootstrapButton>
         </Box>
       </Grid>
-    </div>
+    </Grid>
   );
 }
 
