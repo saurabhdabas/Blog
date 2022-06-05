@@ -1,7 +1,7 @@
 import { React,useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-
 import { Grid, Box, Typography, Avatar, Chip, Stack, Paper } from  '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import IconButton from '@mui/material/IconButton';
@@ -10,7 +10,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../components/Navbar';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../firebase-config';
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 
 const Post = () => {
   // const [likes, setLikes] = useState(0);
@@ -33,6 +33,14 @@ const Post = () => {
   const user = JSON.parse(localStorage.getItem('user'));
 
   const { id } = useParams();
+
+  // Delete the post when clicke
+  const handlePostDelete = (event) => {
+    event.preventDefault();
+    deleteDoc(doc(db, "posts", id)).then(()=>{
+      navigate('/home')
+    })
+  }
 
   // Handle Navigation
   let navigate = useNavigate();
@@ -91,9 +99,17 @@ const Post = () => {
               <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" sx={{ textTransform: 'uppercase'}}>
                 {post.title}
               </Typography>
-              <Tooltip title="Home" placement="right">
-                <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF",position:'absolute', left:945, top:27}} >
-                  <HomeIcon onClick = {handleNavigation}/>
+              {post.author.email === user.email ?
+              <Tooltip title="Delete" placement="bottom">
+              <IconButton aria-label="delete" sx={{color:"#1976d2"}} onClick ={handlePostDelete}>
+                <DeleteIcon/>
+              </IconButton>
+              </Tooltip> : 
+              ""
+              }
+              <Tooltip title="Home" placement="right" >
+                <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF",position:'absolute', left:945, top:27}} onClick = {handleNavigation}>
+                  <HomeIcon />
                 </IconButton>
               </Tooltip>
     
@@ -102,7 +118,7 @@ const Post = () => {
                   {post.publishDate}
                 </Typography>
                 <Chip
-                  // avatar={<Avatar alt={post.author.name} src={post.author.img} />}
+                  avatar={<Avatar alt={post.author.name} src={post.author.img} />}
                   label=
                   {              
                     <Typography variant="h6" noWrap component="div" fontSize={16} fontFamily="'Raleway', sans-serif" >
@@ -119,8 +135,8 @@ const Post = () => {
                 fontSize={16} 
                 fontFamily="'Raleway', sans-serif"
               >
-                <img src={post.imageSrc} alt="tag" />
-                <Typography variant="h6" Wrap component="div" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='justify'>
+                <img src={!post.imageSrc ? "/NoImage.png" : post.imageSrc } alt="tag" width="800" height="400"/>
+                <Typography variant="h6" wrap="true" component="div" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='justify'>
                   {post.content}
                 </Typography>         
               </Box>
