@@ -51,7 +51,7 @@ const Home = () => {
   let navigate = useNavigate();
   
   const posts = postsList.map((post)=>{
-
+    console.log("post:",post);
     // Redirects to posts page
     const handlePostRedirect = () => {
       navigate(`/posts/${post.id}`)
