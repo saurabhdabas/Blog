@@ -10,7 +10,7 @@ import { db, auth } from '../firebase-config';
 
 function CreatePost() {
 
-  console.log(new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"}));
+
   // Handle user's Input for posts's title
   const [title, setTitle] = useState("");
   const handleTitleChange = (event) => {
@@ -53,7 +53,7 @@ function CreatePost() {
         title : title,
         imageSrc : imageUrl,
         content: content,
-        publishDate:new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}),
+        publishDate:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"}),
         author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email, img:auth.currentUser.photoURL}
        })
       navigate('/home');
@@ -112,7 +112,7 @@ function CreatePost() {
           
           <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:800, marginTop:5, marginBottom:5}}>
             <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
-              Publish on : {new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})} 
+              Publish on : {new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})} 
             </Typography>
             <Chip
               avatar={<Avatar alt={user.name} src={user.photo} />}
