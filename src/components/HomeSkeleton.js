@@ -58,18 +58,18 @@ const HomeSkeleton = () => {
         </Stack>
       }
     />
-    <Skeleton sx={{ height: 194 }} animation="wave" variant="rectangular" />
+    <Skeleton sx={{ height: 194, marginLeft:1, marginRight:1}} animation="wave" variant="rectangular" />
 
     <CardActions >
       <Grid container display='flex' alignItems='center' justifyContent='space-between' direction="row" >
       <Tooltip title="Share" placement="bottom">
         <IconButton aria-label="share" sx={{color:"#1976d2"}}>
-          <Skeleton animation="wave" variant="circular" width={30} height={30} />
+          <Skeleton animation="wave" variant="circular" width={28} height={28} />
         </IconButton>
         </Tooltip>
         <Tooltip title="View" placement="bottom">
         <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}}>
-        <Skeleton animation="wave" variant="circular" width={30} height={30} />
+        <Skeleton animation="wave" variant="circular" width={28} height={28} />
         </IconButton>
         </Tooltip>
       </Grid>
