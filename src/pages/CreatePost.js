@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import { Grid, Box, Typography, Avatar, Button, Chip, TextField, Paper } from  '@mui/material';
 import { styled } from '@mui/material/styles';
 import PublishIcon from '@mui/icons-material/Publish';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth } from '../firebase-config';
 
@@ -113,9 +114,13 @@ function CreatePost() {
           </Typography>
           
           <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:800, marginTop:5, marginBottom:5}}>
+            
             <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
-              Publish on : {new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})} 
+              <Box display='flex' flexDirection="row" alignItems='center'>
+              <CalendarTodayIcon sx={{marginRight:1, color:"#1976d2"}}/> Publish On: {new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})}
+              </Box>
             </Typography>
+            
             <Chip
               avatar={<Avatar alt={user.name} src={user.photo} />}
               label=
