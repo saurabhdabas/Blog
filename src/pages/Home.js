@@ -21,12 +21,12 @@ import Tooltip from '@mui/material/Tooltip';
 import Snackbar from '@mui/material/Snackbar';
 import PageviewIcon from '@mui/icons-material/Pageview';
 import ShareIcon from '@mui/icons-material/Share';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import Skeleton from '@mui/material/Skeleton';
 
 import HomeSkeleton from '../components/HomeSkeleton';
 const Home = () => {
 
-  
   const [open, setOpen] = useState(false);
   const [postsList, setPostsList] = useState([]);
   const [isLoading,setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ const Home = () => {
     })
     setTimeout(()=>{
       setIsLoading(true)
-    },1000)
+    },2000)
   },[])
 
   // Retrieving user Info from local Storage
@@ -66,21 +66,25 @@ const Home = () => {
 
     return (
       <>
-      {isLoading ? <Card sx={{ width: 350, height:350, backgroundColor:"#E9ECEF"}} key={post.id}>
+      {isLoading ? <Card sx={{ width: 350, height:380, backgroundColor:"#E9ECEF", cursor:"pointer"}} key={post.id}>
           <CardHeader
             title=
             {
               <Typography variant="h6" textAlign='center' noWrap component="div" fontSize={22} fontFamily="'Raleway', sans-serif" sx={{width:320}}>
               {post.title}
+              <hr/>
               </Typography>
+              
             }
             subheader=
             {
               <Stack direction="row" spacing={5} mt={1} display='flex' justifyContent='space-between' alignItems='center' sx={{width:320}}>
-                <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
-                {post.publishDate}
-                </Typography>
-                
+                <Box display='flex' flexDirection="row" alignItems='center'>
+                  <CalendarTodayIcon sx={{marginRight:1, color:"#1976d2"}}/>
+                  <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
+                    {post.publishDate}
+                  </Typography>
+                </Box>
                 <Chip
                 avatar={<Avatar alt={post.author.name} src={isLoading ? post.author.img : <Skeleton animation="wave" variant="circular" width={40} height={40} />} />}
                 label=
@@ -130,7 +134,7 @@ const Home = () => {
   return (
     <Grid style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" }}>
       <Navbar/>
-      <Box sx={{ display: 'grid',gap: 4, gridTemplateColumns: 'repeat(3, 1fr)', marginTop:12, marginBottom:15, marginLeft:25, marginRight:15 }} >
+      <Box sx={{ display: 'grid',gap: 4, gridTemplateColumns: 'repeat(3, 1fr)', marginTop:12,  marginLeft:25, marginRight:15 , minHeight: '100vh'}} >
         {posts}
       </Box>
     </Grid>
