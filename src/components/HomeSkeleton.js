@@ -25,7 +25,7 @@ const HomeSkeleton = () => {
         <Skeleton
         animation="wave"
         height={10}
-        width="80%"
+        width="100%"
         sx={{marginBottom:3}}
       />
         </Typography>
