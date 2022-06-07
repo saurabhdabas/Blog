@@ -6,7 +6,9 @@ import { styled } from '@mui/material/styles';
 import PublishIcon from '@mui/icons-material/Publish';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { addDoc, collection } from 'firebase/firestore';
-import { db, auth } from '../firebase-config';
+import { db, auth, storage } from '../firebase-config';
+import { ref, uploadBytes } from 'firebase/storage';
+import { v4 } from "uuid";
 
 function CreatePost() {
 
@@ -25,13 +27,20 @@ function CreatePost() {
   
   // Handle user's Input for posts's Image
   const [image, setImage] = useState(null);
+  const handleImage = (event) => {
+    setImage(event.target.files[0])
+  }
   
   // Display a preview of the image using the URL object
-
   const [imageUrl, setImageUrl] = useState(null);
 
+  // handle Image upload to firebase storage
+  const [imageUpload, setImageUpload] = useState(null);
+
   useEffect(() => {
+    
     if (image) {
+      console.log("image:",image);
       setImageUrl(URL.createObjectURL(image));
     }
   }, [image]);
@@ -43,10 +52,10 @@ function CreatePost() {
 
   const postsCollectionRef = collection( db, "posts");
 
-
   let navigate = useNavigate();
 
   const submitHandler = (event) => {
+   
     event.preventDefault();
     if(title && content) {
       addDoc(postsCollectionRef, { 
@@ -55,7 +64,13 @@ function CreatePost() {
         content: content,
         publishDate:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"}),
         author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email, img:auth.currentUser.photoURL}
-       })
+      })
+      setImageUpload(imageUrl);
+      console.log(imageUpload);
+      const imageRef = ref(storage, `images/${image.name + v4()}`);
+      uploadBytes(imageRef, imageUpload).then(()=>{
+      console.log("Image Uploaded")
+      })
       navigate('/home');
     }
   };
@@ -96,7 +111,7 @@ function CreatePost() {
         justifyContent="center"
         style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" }}
       >
-        <Paper elevation={3} borderRadius={5}
+        <Paper elevation={3} 
           sx={{width:900, marginTop:15, marginBottom:10, backgroundColor:"#E9ECEF"}}>
         <Box
           component="div"
@@ -153,7 +168,7 @@ function CreatePost() {
             type="file"
             id="select-image"
             style={{ display: 'none' }}
-            onChange={e => setImage(e.target.files[0])}
+            onChange={handleImage}
           />
             <label htmlFor="select-image">
               <Button variant="contained" color="primary" component="span">
