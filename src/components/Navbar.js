@@ -125,7 +125,7 @@ export default function Navbar() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} sx={{backgroundColor:"#343A40"}}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -143,11 +143,13 @@ export default function Navbar() {
       </AppBar>
       <Drawer
         sx={{
+          
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            backgroundColor:"#F6F6F6"
           },
         }}
         variant="persistent"
