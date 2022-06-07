@@ -66,7 +66,7 @@ const Home = () => {
 
     return (
       <>
-      {isLoading ? <Card sx={{ width: 350, height:380, backgroundColor:"#E9ECEF", cursor:"pointer"}} key={post.id}>
+      {isLoading ? <Card sx={{ width: 350, height:378, backgroundColor:"#E9ECEF", cursor:"pointer"}} key={post.id}>
           <CardHeader
             title=
             {
