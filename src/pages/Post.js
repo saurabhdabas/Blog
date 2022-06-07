@@ -1,20 +1,23 @@
 import { React,useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Grid, Box, Typography, Avatar, Chip, Stack, Paper } from  '@mui/material';
+import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper } from  '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../components/Navbar';
+import PostSkeleton from '../components/PostSkeleton';
 
 import { db } from '../firebase-config';
-import { doc,getDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
+
+
 
 const Post = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
-
+  
   const [post, setPost] = useState({
   title:"",
   publishDate:"",
@@ -24,9 +27,10 @@ const Post = () => {
   });
   
   useEffect(()=>{
+    
     getDoc(doc(db, "posts", id))
     .then((response)=>{
-    
+      console.log(response.data());
       setPost((prevValue)=>({
         ...prevValue,
         title:response.data().title,
@@ -42,8 +46,11 @@ const Post = () => {
         })
       )
     })
+    setTimeout(()=>{
+      setIsLoading(true)
+    },1000)
   },[])
-
+  
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -78,35 +85,54 @@ const Post = () => {
           padding={3}
           justifyContent="space-around"
           borderRadius={5}
-          sx={{position:'relative'}}
         >
-          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" sx={{ textTransform: 'uppercase'}}>
-            {post.title}
-          </Typography>
-          {post.author.email === user.email ?
-          <Tooltip title="Delete" placement="bottom">
-          <IconButton aria-label="delete" sx={{color:"#1976d2"}} onClick ={handlePostDelete}>
-            <DeleteIcon/>
-          </IconButton>
-          </Tooltip> : 
-          ""
-          }
+          <Grid display='flex' alignItems='center' justifyContent='space-between' sx={{width:"100%"}}>
           <Tooltip title="Home" placement="right" >
-            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF",position:'absolute', left:945, top:27}} onClick = {handleNavigation}>
-              <HomeIcon />
+            <IconButton aria-label="Home"  onClick = {handleNavigation} sx={{color:"#1976d2"}}>
+              {isLoading ? <HomeIcon />  : <Skeleton animation="wave" variant="circular" width={30} height={30} />}
             </IconButton>
           </Tooltip>
+          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" sx={{ textTransform: 'uppercase'}}>
+            {isLoading ? post.title :           
+            <Skeleton
+            animation="wave"
+            height={30}
+            width="700px"
+            
+          />}
+          </Typography>
 
+          {post.author.email === user.email ? isLoading ? <Tooltip title="Delete" placement="right">
+          <IconButton aria-label="delete"  onClick ={handlePostDelete} sx={{color:"#1976d2"}}>
+            <DeleteIcon/>
+          </IconButton>
+          </Tooltip>: <Skeleton animation="wave" variant="circular" width={30} height={30} />
+           : 
+            <div></div>
+          }
+          </Grid>
           <Box display='flex' flexDirection="row" alignItems='start' justifyContent='space-between' sx={{width:"100%", marginTop:5, marginBottom:5}}>
             <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
-              {post.publishDate}
+              { isLoading ? post.publishDate :             
+              <Skeleton
+              animation="wave"
+              height={10}
+              width="100px"
+              />
+              }
             </Typography>
             <Chip
-              avatar={<Avatar alt={post.author.name} src={post.author.image} />}
+              avatar={<Avatar alt={post.author.name} src={isLoading ? post.author.image : <Skeleton animation="wave" variant="circular" width={20} height={20} />} />}
               label=
               {              
                 <Typography variant="h6" noWrap component="div" fontSize={16} fontFamily="'Raleway', sans-serif" >
-                {post.author.name}
+              { isLoading ? post.author.name :             
+              <Skeleton
+              animation="wave"
+              height={10}
+              width="70px"
+              />
+              }
                 </Typography>
               }
               variant="outlined" 
@@ -119,30 +145,37 @@ const Post = () => {
             fontSize={16} 
             fontFamily="'Raleway', sans-serif"
           >
-            <img src={!post.img ? "/NoImage.png" : post.img } alt="tag" width="700" height="400"/>
+            {isLoading ? <img src={!post.img ? "/NoImage.png" : post.img } alt="tag" width="700" height="200"/> :  <Skeleton animation="wave" variant="rectangular" width={700} height={200} />}
+
             <Typography variant="h6" wrap="true" component="div" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='justify'>
-              {post.content}
+              {isLoading ? post.content :             
+              <Skeleton
+              animation="wave"
+              height={30}
+              width={700}
+            />}
             </Typography>         
           </Box>
         
-          <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%'}}>
+          {/* <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%'}}>
           <Tooltip title="Like" placement="right">
-            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}>
+            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}
+            onClick ={handleLikes}>
               <ThumbUpIcon cursor="pointer" sx={{width:30, height:30}}/>
               <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif" sx={{color:"#28A745"}}>
-                LIKES
+                Likes : {likes}
               </Typography>
             </IconButton>
           </Tooltip>
           <Tooltip title="Dislike" placement="right">
-            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}>
+            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}} >
               <ThumbDownIcon  cursor="pointer" sx={{width:30, height:30}}/>
               <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif" sx={{color:"#DC3545"}}>
-                DISLIKES
+                D
               </Typography>
             </IconButton>
           </Tooltip>
-          </Stack>
+          </Stack> */}
         </Box>
         </Paper>
       </Grid>
