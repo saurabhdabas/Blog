@@ -7,7 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../components/Navbar';
-import PostSkeleton from '../components/PostSkeleton';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+
 
 import { db } from '../firebase-config';
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
@@ -30,7 +31,7 @@ const Post = () => {
     
     getDoc(doc(db, "posts", id))
     .then((response)=>{
-      console.log(response.data());
+      
       setPost((prevValue)=>({
         ...prevValue,
         title:response.data().title,
@@ -113,16 +114,25 @@ const Post = () => {
           </Grid>
           <Box display='flex' flexDirection="row" alignItems='start' justifyContent='space-between' sx={{width:"100%", marginTop:5, marginBottom:5}}>
             <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
-              { isLoading ? post.publishDate :             
-              <Skeleton
-              animation="wave"
-              height={10}
-              width="100px"
-              />
+              { isLoading ? 
+              <Box display='flex' flexDirection="row" alignItems='center'>
+                  <CalendarTodayIcon sx={{marginLeft:1, marginRight:1,color:"#1976d2"}}/>
+                  <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
+                    {post.publishDate}
+                  </Typography>
+              </Box> :
+              <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:"100%",marginRight:1}}>
+                <Skeleton animation="wave" variant="circular" width={30} height={30} />
+                <Skeleton
+                animation="wave"
+                height={20}
+                width="100px"
+                />
+              </Box>             
               }
             </Typography>
             <Chip
-              avatar={<Avatar alt={post.author.name} src={isLoading ? post.author.image : <Skeleton animation="wave" variant="circular" width={20} height={20} />} />}
+              avatar={isLoading ? <Avatar alt={post.author.name} src={post.author.image}/> : <Skeleton animation="wave" variant="circular" width={20} height={20} />}
               label=
               {              
                 <Typography variant="h6" noWrap component="div" fontSize={16} fontFamily="'Raleway', sans-serif" >
