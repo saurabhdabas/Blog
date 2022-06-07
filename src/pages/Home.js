@@ -66,7 +66,7 @@ const Home = () => {
 
     return (
       <>
-      {isLoading ? <Card sx={{ width: 350, height:350}} key={post.id}>
+      {isLoading ? <Card sx={{ width: 350, height:350, backgroundColor:"#E9ECEF"}} key={post.id}>
           <CardHeader
             title=
             {
@@ -128,7 +128,7 @@ const Home = () => {
   });
 
   return (
-    <Grid style={{ minHeight: '100vh', backgroundColor: "#F1F3F4" }}>
+    <Grid style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" }}>
       <Navbar/>
       <Box sx={{ display: 'grid',gap: 4, gridTemplateColumns: 'repeat(3, 1fr)', marginTop:12, marginBottom:15, marginLeft:25, marginRight:15 }} >
         {posts}
