@@ -1,12 +1,11 @@
 import { React, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { Grid, Box, Typography, Avatar, Button, Chip, TextField } from  '@mui/material';
+import { Grid, Box, Typography, Avatar, Button, Chip, TextField, Paper } from  '@mui/material';
 import { styled } from '@mui/material/styles';
 import PublishIcon from '@mui/icons-material/Publish';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth } from '../firebase-config';
-
 
 function CreatePost() {
 
@@ -94,8 +93,10 @@ function CreatePost() {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        style={{ minHeight: '100vh', backgroundColor: "#F1F3F4" }}
+        style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" }}
       >
+        <Paper elevation={3} borderRadius={5}
+          sx={{width:900, marginTop:15, marginBottom:10, backgroundColor:"#E9ECEF"}}>
         <Box
           component="div"
           display="flex"
@@ -104,8 +105,9 @@ function CreatePost() {
           padding={3}
           justifyContent="space-around"
           borderRadius={5}
-          sx={{width:900, marginTop:15, marginBottom:10}}
+          sx={{width:900,backgroundColor:"#E9ECEF"}}
         >
+          
           <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif">
             Write an Article
           </Typography>
@@ -194,7 +196,9 @@ function CreatePost() {
               Publish Your Article
             </Typography>
           </BootstrapButton>
+          
         </Box>
+        </Paper>
       </Grid>
     </Grid>
   );
