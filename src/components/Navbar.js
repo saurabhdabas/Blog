@@ -137,13 +137,12 @@ export default function Navbar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" fontFamily="'Raleway', sans-serif">
-            Welcome back !
+            Welcome back 👋🏼 ! {user.name}
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer
         sx={{
-          
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
