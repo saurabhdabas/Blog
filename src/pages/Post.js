@@ -68,7 +68,7 @@ const Post = () => {
     navigate(-1);
   }
   return (
-    <Grid>
+    <Grid sx={{backgroundColor:"#F6F6F6", height:"100vh"}}>
       <Navbar/>
       <Grid
         container
@@ -76,7 +76,7 @@ const Post = () => {
         alignItems="center"
         justifyContent="start"
       >
-        <Paper elevation={3} sx={{width:1000, marginTop:15, marginBottom:15, backgroundColor:"#FFFFFF"}}>
+        <Paper elevation={3} sx={{width:1000, marginTop:15, marginBottom:15, backgroundColor:"#E9ECEF"}}>
         <Box
           component="form"
           display="flex"
@@ -97,7 +97,7 @@ const Post = () => {
             <Skeleton
             animation="wave"
             height={30}
-            width="700px"
+            width={800}
             
           />}
           </Typography>
