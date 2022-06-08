@@ -26,6 +26,8 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import Skeleton from '@mui/material/Skeleton';
 import HomeSkeleton from '../components/HomeSkeleton';
 import { v4 } from "uuid";
+
+import { doc, updateDoc } from "firebase/firestore";
 import { storage } from "../firebase-config";
 import {
   ref,
@@ -71,13 +73,13 @@ const Home = () => {
   useEffect(()=>{
     listAll(imagesListRef).then((response) => {
       response.items.forEach((item) => {
-        console.log("postsList:",postsList);
         getDownloadURL(item).then((url) => {
           postsList.forEach((item)=>{
-            console.log("itemimageSrc:",item.imageSrc.slice(27));
-            console.log("url:",url.slice(78,114));
             if(item.imageSrc.slice(27)=== url.slice(78,114)){
-              setImageURL(url);
+              updateDoc(doc(db,"posts",item.id),{url:url})
+              .then(()=>{
+                console.log("Image Uploaded");
+              })
             }
           })
         });
@@ -88,31 +90,15 @@ const Home = () => {
   let navigate = useNavigate();
   
   const posts = postsList.map((post)=>{
-    console.log(post);
+    
     // Redirects to posts page
     const handlePostRedirect = () => {
       navigate(`/posts/${post.id}`)
     }
 
-    //   listAll(imagesListRef).then((response) => {
-    //   response.items.forEach((item) => {
-    //     console.log("postsList:",postsList);
-    //     getDownloadURL(item).then((url) => {
-    //       postsList.forEach((item)=>{
-    //         console.log("itemimageSrc:",item.imageSrc.slice(27));
-    //         console.log("url:",url.slice(78,114));
-    //         if(item.imageSrc.slice(27)=== url.slice(78,114)){
-    //           setImageURL(url);
-    //         }
-    //       })
-    //     });
-    //   });
-    // });
-
-
     return (
       <>
-      {isLoading ? <Card sx={{ width: 350, height: 240, backgroundColor:"#FFFFFF", cursor:"pointer"}} key={v4()}>
+      {isLoading ? <Card sx={{ width: 350, height: 450, backgroundColor:"#FFFFFF", cursor:"pointer"}} key={v4()}>
           <CardHeader
             title=
             {
@@ -120,7 +106,6 @@ const Home = () => {
               {post.title}
               <hr/>
               </Typography>
-              
             }
             subheader=
             {
@@ -143,6 +128,13 @@ const Home = () => {
               />
               </Stack>
             }
+          />
+          <CardMedia
+            component="img"
+            height="200"
+            image={post.url}
+            alt={post.title}
+            sx={{padding:'16px'}}
           />
           <CardContent>
             <Typography component="div" textAlign ='justify' variant="body2" noWrap color="text.secondary" fontFamily="'Snowburst One', cursive" fontWeight={900}>
