@@ -18,7 +18,7 @@ import Skeleton from '@mui/material/Skeleton';
 
 const HomeSkeleton = () => {
   return (
-    <Card sx={{ width: 350, height:240}}>
+    <Card sx={{ width: 350, height:450}}>
     <CardHeader
       title=
       {
@@ -60,13 +60,12 @@ const HomeSkeleton = () => {
         </Stack>
       }
     />
+    <Skeleton sx={{ height: 200,padding:'16px'}} animation="wave" variant='rectangular'/>
     <CardContent>
       <Typography variant="body2" color="text.secondary">
         <Skeleton sx={{ height: 20}} animation="wave" />
       </Typography>
     </CardContent>
-
-
     <CardActions >
       <Grid container display='flex' alignItems='center' justifyContent='space-between' direction="row" >
       <Tooltip title="Share" placement="bottom">
