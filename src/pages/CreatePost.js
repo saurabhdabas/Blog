@@ -7,7 +7,7 @@ import PublishIcon from '@mui/icons-material/Publish';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, storage } from '../firebase-config';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { v4 } from "uuid";
 
 function CreatePost() {
@@ -34,17 +34,12 @@ function CreatePost() {
   // Display a preview of the image using the URL object
   const [imageUrl, setImageUrl] = useState(null);
 
-  // handle Image upload to firebase storage
-  const [imageUpload, setImageUpload] = useState(null);
-
-  useEffect(() => {
-    
-    if (image) {
-      console.log("image:",image);
+  useEffect(() =>{
+    if(image){
       setImageUrl(URL.createObjectURL(image));
     }
-  }, [image]);
-
+  },[image]);
+  
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -57,19 +52,22 @@ function CreatePost() {
   const submitHandler = (event) => {
    
     event.preventDefault();
-    if(title && content) {
+    if(title && content && imageUrl) {
       addDoc(postsCollectionRef, { 
+        postId:v4(),
         title : title,
         imageSrc : imageUrl,
         content: content,
         publishDate:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"}),
         author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email, img:auth.currentUser.photoURL}
       })
-      setImageUpload(imageUrl);
-      console.log(imageUpload);
-      const imageRef = ref(storage, `images/${image.name + v4()}`);
-      uploadBytes(imageRef, imageUpload).then(()=>{
-      console.log("Image Uploaded")
+      console.log("imageUrl:",imageUrl.slice(27));
+      const imageRef = ref(storage, `images/${imageUrl.slice(27)}`);
+      const metadata = {
+        contentType: 'image/png',
+      };
+      uploadBytes(imageRef, image, metadata).then((data)=>{
+        console.log("metadata:",data);
       })
       navigate('/home');
     }
@@ -216,7 +214,7 @@ function CreatePost() {
               Publish Your Article
             </Typography>
           </BootstrapButton>
-          
+
         </Box>
         </Paper>
       </Grid>

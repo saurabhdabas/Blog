@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
@@ -17,17 +18,18 @@ import Skeleton from '@mui/material/Skeleton';
 
 const HomeSkeleton = () => {
   return (
-    <Card sx={{ width: 350, height:350}}>
+    <Card sx={{ width: 350, height:240}}>
     <CardHeader
       title=
       {
         <Typography variant="h6" textAlign='center' noWrap component="div" fontSize={22} fontFamily="'Raleway', sans-serif" sx={{width:320}}>
         <Skeleton
         animation="wave"
-        height={10}
+        height={30}
         width="100%"
         sx={{marginBottom:3}}
       />
+        <hr/>
         </Typography>
       }
       subheader=
@@ -36,7 +38,7 @@ const HomeSkeleton = () => {
           <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
           <Skeleton
         animation="wave"
-        height={10}
+        height={20}
         width="70px"
       />
           </Typography>
@@ -58,7 +60,12 @@ const HomeSkeleton = () => {
         </Stack>
       }
     />
-    <Skeleton sx={{ height: 194, marginLeft:1, marginRight:1}} animation="wave" variant="rectangular" />
+    <CardContent>
+      <Typography variant="body2" color="text.secondary">
+        <Skeleton sx={{ height: 20}} animation="wave" />
+      </Typography>
+    </CardContent>
+
 
     <CardActions >
       <Grid container display='flex' alignItems='center' justifyContent='space-between' direction="row" >

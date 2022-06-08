@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
@@ -23,13 +24,25 @@ import PageviewIcon from '@mui/icons-material/Pageview';
 import ShareIcon from '@mui/icons-material/Share';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import Skeleton from '@mui/material/Skeleton';
-
 import HomeSkeleton from '../components/HomeSkeleton';
+import { v4 } from "uuid";
+import { storage } from "../firebase-config";
+import {
+  ref,
+  getDownloadURL,
+  listAll
+} from "firebase/storage";
+
+
+
 const Home = () => {
 
-  const [open, setOpen] = useState(false);
   const [postsList, setPostsList] = useState([]);
+  const [open, setOpen] = useState(false);
   const [isLoading,setIsLoading] = useState(false);
+
+  const imagesListRef = ref(storage, "images/");
+  const [ imageURL, setImageURL] = useState("");
   
   const postsCollectionRef = collection( db, "posts");
 
@@ -40,8 +53,9 @@ const Home = () => {
     setTimeout(()=>{
       setIsLoading(true)
     },2000)
-  },[])
 
+  },[])
+  
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
   
@@ -54,19 +68,51 @@ const Home = () => {
     },1000)
   };
 
+  useEffect(()=>{
+    listAll(imagesListRef).then((response) => {
+      response.items.forEach((item) => {
+        console.log("postsList:",postsList);
+        getDownloadURL(item).then((url) => {
+          postsList.forEach((item)=>{
+            console.log("itemimageSrc:",item.imageSrc.slice(27));
+            console.log("url:",url.slice(78,114));
+            if(item.imageSrc.slice(27)=== url.slice(78,114)){
+              setImageURL(url);
+            }
+          })
+        });
+      });
+    });
+  },[postsList])
+
   let navigate = useNavigate();
   
   const posts = postsList.map((post)=>{
-    
+    console.log(post);
     // Redirects to posts page
     const handlePostRedirect = () => {
       navigate(`/posts/${post.id}`)
     }
 
+    //   listAll(imagesListRef).then((response) => {
+    //   response.items.forEach((item) => {
+    //     console.log("postsList:",postsList);
+    //     getDownloadURL(item).then((url) => {
+    //       postsList.forEach((item)=>{
+    //         console.log("itemimageSrc:",item.imageSrc.slice(27));
+    //         console.log("url:",url.slice(78,114));
+    //         if(item.imageSrc.slice(27)=== url.slice(78,114)){
+    //           setImageURL(url);
+    //         }
+    //       })
+    //     });
+    //   });
+    // });
+
 
     return (
       <>
-      {isLoading ? <Card sx={{ width: 350, height:378, backgroundColor:"#E9ECEF", cursor:"pointer"}} key={post.id}>
+      {isLoading ? <Card sx={{ width: 350, height: 240, backgroundColor:"#E9ECEF", cursor:"pointer"}} key={v4()}>
           <CardHeader
             title=
             {
@@ -98,15 +144,18 @@ const Home = () => {
               </Stack>
             }
           />
-           
-          <CardMedia
+          <CardContent>
+            <Typography component="div" textAlign ='justify' variant="body2" noWrap color="text.secondary" fontFamily="'Raleway', sans-serif">
+              {post.content}
+            </Typography>
+          </CardContent>
+          {/* <CardMedia
             component="img"
             height="194"
-            image={!post.imageSrc ? "/NoImage.png" : post.imageSrc }
+            image={post.imageSrc ? imageURL: "/NoImage.png"}
             alt={post.title}
             sx={{padding:1}}
-          />
-
+          /> */}
           <CardActions >
             <Grid container display='flex' alignItems='center' justifyContent='space-between' direction="row" >
             <Tooltip title="Share" placement="bottom">
