@@ -116,7 +116,7 @@ const Home = () => {
           <CardHeader
             title=
             {
-              <Typography variant="h6" textAlign='center' noWrap component="div" fontSize={22} fontFamily="'Raleway', sans-serif" sx={{width:320}}>
+              <Typography variant="h6" textAlign='center' noWrap component="div" fontSize={22} fontFamily="'Snowburst One', cursive" sx={{width:320}} textTransform='uppercase'>
               {post.title}
               <hr/>
               </Typography>

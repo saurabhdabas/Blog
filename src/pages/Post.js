@@ -123,7 +123,7 @@ const Post = () => {
               {isLoading ? <HomeIcon />  : <Skeleton animation="wave" variant="circular" width={25} height={25} />}
             </IconButton>
           </Tooltip>
-          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Raleway', sans-serif" textAlign='center'sx={{ textTransform: 'uppercase', width:'50%'}}>
+          <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Snowburst One', cursive" textAlign='center'sx={{ textTransform: 'uppercase', width:'50%'}}>
             {isLoading ? post.title :           
             <Skeleton
             animation="wave"

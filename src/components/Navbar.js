@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -27,7 +28,7 @@ import { Link } from 'react-router-dom';
 import { auth } from '../firebase-config';
 import { signOut } from 'firebase/auth';
 
-const drawerWidth = 230;
+const drawerWidth = 260;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -136,9 +137,18 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
+          <Grid display='flex' sx={{width:"100%"}} alignItems='center' justifyContent='space-between'>
           <Typography variant="h6" noWrap component="div" fontSize={28}fontFamily="'Pacifico', cursive">
             Welcome back 👋🏼 ! {user.name}
           </Typography>
+          <StyledBadge
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            variant="dot"
+          >
+            <Avatar alt={user.name} src={user.photo} />
+          </StyledBadge>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -155,15 +165,9 @@ export default function Navbar() {
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
-          <StyledBadge
-            overlap="circular"
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            variant="dot"
-          >
-            <Avatar alt={user.name} src={user.photo} />
-          </StyledBadge>
-          <Typography fontFamily="'Raleway', sans-serif" ml={2}>{user.name}</Typography>
+        <DrawerHeader sx={{padding:2}}>
+          <Avatar alt={user.name} src="/story.png" sx={{height:100, width:100}}/>
+          <Typography fontFamily="'Raleway', sans-serif" ml={2}>StoryBook</Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
@@ -188,7 +192,7 @@ export default function Navbar() {
                   <ListItemIcon><CreateIcon sx={{color:"#1976d2"}}/></ListItemIcon>
                   <ListItemText primary= { 
                     <Typography variant="h7" fontFamily="'Raleway', sans-serif" style={{ color: "black" }}>
-                      Write a Post
+                      Write a Story
                     </Typography>}
                   />
                 </ListItemButton>

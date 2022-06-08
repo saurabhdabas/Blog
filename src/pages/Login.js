@@ -73,7 +73,7 @@ const Login = () => {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ minHeight: '100vh', backgroundColor:"#F1F3F4"}}
+      style={{ minHeight: '100vh', backgroundColor:"#FFFFFF"}}
     >
       <Box
         component="form"
@@ -89,13 +89,16 @@ const Login = () => {
         }}
         noValidate
         autoComplete="off"
-      >
-        <Typography variant="h6" noWrap component="div" fontSize={36} fontFamily="'Epilogue', sans-serif">
-          Blog - Let Your Imagination Fly 
+      > 
+        <Typography variant="h6" noWrap component="div" fontSize={34} fontFamily="'Snowburst One', cursive">
+          StoryBook 
+        </Typography>
+        <Typography variant="h6" noWrap component="div" fontSize={34} fontFamily="'Snowburst One', cursive">
+          Discover amazing children stories 
         </Typography>
         <Avatar
           alt="Google Logo"
-          src="b-logoNew.jpeg"
+          src="story.png"
           sx={{width:200, height:200, borderRadius:50}}
         />
         <BootstrapButton 
@@ -111,7 +114,7 @@ const Login = () => {
           alt="Google Logo"
           src="google.png"
         />
-          <Typography marginLeft={2} fontFamily="'Epilogue', sans-serif">
+          <Typography marginLeft={2} fontFamily="'Raleway', sans-serif">
             Sign In With Google
           </Typography>
         </BootstrapButton>
