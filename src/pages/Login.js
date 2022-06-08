@@ -90,10 +90,10 @@ const Login = () => {
         noValidate
         autoComplete="off"
       > 
-        <Typography variant="h6" noWrap component="div" fontSize={34} fontFamily="'Snowburst One', cursive">
+        <Typography variant="h6" noWrap component="div" fontSize={70} fontFamily="'Snowburst One', cursive">
           StoryBook 
         </Typography>
-        <Typography variant="h6" noWrap component="div" fontSize={34} fontFamily="'Snowburst One', cursive">
+        <Typography variant="h6" noWrap component="div" fontSize={25} fontFamily="'Snowburst One', cursive">
           Discover amazing children stories 
         </Typography>
         <Avatar
