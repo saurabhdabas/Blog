@@ -127,7 +127,7 @@ const Home = () => {
               <Stack direction="row" spacing={5} mt={1} display='flex' justifyContent='space-between' alignItems='center' sx={{width:320}}>
                 <Box display='flex' flexDirection="row" alignItems='center'>
                   <CalendarTodayIcon sx={{marginRight:1, color:"#1976d2"}}/>
-                  <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
+                  <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Snowburst One', cursive">
                     {post.publishDate}
                   </Typography>
                 </Box>
@@ -145,7 +145,7 @@ const Home = () => {
             }
           />
           <CardContent>
-            <Typography component="div" textAlign ='justify' variant="body2" noWrap color="text.secondary" fontFamily="'Raleway', sans-serif">
+            <Typography component="div" textAlign ='justify' variant="body2" noWrap color="text.secondary" fontFamily="'Snowburst One', cursive" fontWeight={900}>
               {post.content}
             </Typography>
           </CardContent>

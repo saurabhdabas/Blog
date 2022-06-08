@@ -122,13 +122,13 @@ function CreatePost() {
           sx={{width:900,backgroundColor:"#E9ECEF"}}
         >
           
-          <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif">
-            Write an Article
+          <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Snowburst One', cursive">
+            Write a Story
           </Typography>
           
           <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:800, marginTop:5, marginBottom:5}}>
             
-            <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
+            <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Snowburst One', cursive">
               <Box display='flex' flexDirection="row" alignItems='center'>
               <CalendarTodayIcon sx={{marginRight:1, color:"#1976d2"}}/> Publish On: {new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})}
               </Box>
@@ -149,7 +149,7 @@ function CreatePost() {
             id="outlined-name"
             label=
             {
-            <Typography fontSize={20} fontFamily="'Raleway', sans-serif">
+            <Typography fontSize={20} fontFamily="'Snowburst One', cursive">
               Title
             </Typography>
             }
@@ -177,7 +177,7 @@ function CreatePost() {
             </label>
             {imageUrl && image && (
               <Box mt={2} textAlign="center">
-                <Typography fontSize={20} fontFamily="'Raleway', sans-serif">
+                <Typography fontSize={20} fontFamily="'Snowburst One', cursive">
                 Image Preview
                 </Typography>
                 <img src={imageUrl} alt={image.name} height="300px" width="800px"/>
@@ -195,7 +195,7 @@ function CreatePost() {
               onChange={handleContentChange}
               label=
               {
-              <Typography fontSize={20} fontFamily="'Raleway', sans-serif" margin={0.50}>
+              <Typography fontSize={20} fontFamily="'Snowburst One', cursive" margin={0.50}>
                 Content
               </Typography>
               }
@@ -211,7 +211,7 @@ function CreatePost() {
             onClick={submitHandler}>
             <PublishIcon/>
             <Typography marginLeft={5} fontSize={18} fontFamily="'Raleway', sans-serif">
-              Publish Your Article
+              Publish Your Story
             </Typography>
           </BootstrapButton>
 

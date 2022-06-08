@@ -8,7 +8,8 @@ import Tooltip from '@mui/material/Tooltip';
 import HomeIcon from '@mui/icons-material/Home';
 import Navbar from '../components/Navbar';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import totalWords from '../helpers/Words';
 
 import { db } from '../firebase-config';
@@ -17,17 +18,20 @@ import { storage } from "../firebase-config";
 import {
   ref,
   getDownloadURL,
-  listAll,
   list
 } from "firebase/storage";
 
 
 const Post = () => {
+
   const imagesListRef = ref(storage, "images/");
+  const msg = new SpeechSynthesisUtterance();
+
   const [ imageURL, setImageURL] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [readTime, setReadTime] = useState(0);
-
+  const [volume, setVolume] = useState("Off");
+  
   const { id } = useParams();
   
   const [post, setPost] = useState({
@@ -80,6 +84,24 @@ const Post = () => {
     setReadTime(`${(count/275).toFixed(2)}`);
   },[post])
 
+  // Handle Speech 
+
+  const handleVolume = () => {
+    if(volume === "ON"){
+      window.speechSynthesis.cancel();
+      setVolume("OFF")
+    } else {
+      setVolume("ON")
+      msg.text = post.content
+      msg.rate = 0.70
+      window.speechSynthesis.speak(msg)
+    }
+  }
+
+  useEffect(() => {
+    msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name == 'Samantha'})[0];
+  }, [msg])
+  
   // Retrieving user Info from local Storage
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -96,6 +118,7 @@ const Post = () => {
   const handleNavigation = () => {
     navigate(-1);
   }
+
 
 
   return (
@@ -181,27 +204,47 @@ const Post = () => {
               variant="outlined" 
             />
           </Grid>
-          <Grid display='flex' alignItem='center' justifyContent ='center' sx={{marginBottom:5}}>
+          <Grid sx={{marginBottom:5}}>
           {isLoading ? <img src={imageURL} alt="story" style={{borderRadius:'15px',boxShadow: "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px"}}width='700' height='200'/> : <Skeleton animation="wave" variant="rectangular" width={700} height={200}/>}
           </Grid>
           {isLoading ?
-          <Grid container sx={{width:"99.5%", marginBottom:5}} display='flex' alignItems='center' justifyContent='start'>
-            {/* <Grid container display='flex' alignItems='center'> */}
-              <AccessTimeIcon sx={{marginRight:1, marginLeft:1,color:"#1976d2"}}/>
+          <Grid direction='row' alignItems='center' justifyContent='space-between' sx={{width:"99.5%", marginBottom:3}}>
+            <Grid  container  display='flex' alignItems='center' justifyContent='start'>
+                <AccessTimeIcon sx={{marginRight:1, marginLeft:1,color:"#1976d2"}}/>
+                <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='start' sx={{marginRight:1}}>
+                  Read time:
+                </Typography>
+            <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Roboto', sans-serif" textAlign='start'>{readTime}</Typography>
+            <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='start' sx={{marginLeft:1}}>minutes</Typography>
+            <Grid  container  display='flex' alignItems='center' justifyContent='start' sx={{marginTop:1}}>
+              <Tooltip title="Play" placement="left" >
+                <IconButton aria-label="Speak"  sx={{color:"#1976d2"}}>
+                  {volume === "ON" ?  <VolumeUpIcon sx={{color:"#1976d2"}} onClick={handleVolume} cursor='pointer'/>   : <VolumeOffIcon sx={{color:"#1976d2"}} onClick={handleVolume} cursor='pointer'/> }
+                </IconButton>
+              </Tooltip>
               <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='start' sx={{marginRight:1}}>
-                Read time:
+                Sound: {volume}
               </Typography>
-            {/* </Grid>     */}
-          <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Roboto', sans-serif" textAlign='start'>{readTime}</Typography>
-          <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='start' sx={{marginLeft:1}}>minutes</Typography>
+            </Grid>
+            </Grid> 
           </Grid>:
-          <Grid display='flex' flexDirection="row" alignItems='center' justifyContent='start' sx={{width:"99.5%",marginLeft:0.8, marginBottom:5}}>
-            <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
-            <Skeleton
-            animation="wave"
-            height={20}
-            width="100px"
-          />
+          <Grid display='flex' flexDirection="column" alignItems='center' justifyContent='start' sx={{width:"99.5%",marginLeft:0.8, marginBottom:5}}>
+            <Grid  container  display='flex' alignItems='center' justifyContent='start'>
+              <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
+              <Skeleton
+              animation="wave"
+              height={20}
+              width="200px"
+              />
+            </Grid>
+            <Grid  container  display='flex' alignItems='center' justifyContent='start' sx={{marginTop:1}}>
+              <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
+              <Skeleton
+                animation="wave"
+                height={20}
+                width="100px"
+              />
+            </Grid>
           </Grid> 
           }
           <Grid
@@ -209,7 +252,7 @@ const Post = () => {
             fontSize={16} 
             fontFamily="'Raleway', sans-serif"
           >
-            <Typography variant="h6" wrap="true" component="div" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='justify' paddingLeft={1.5} paddingRight={1.5} lineHeight='3' >
+            <Typography variant="h6" wrap="true" component="div" fontSize={16} fontFamily="'Snowburst One', cursive" textAlign='justify' paddingLeft={1.5} paddingRight={1.5} lineHeight='3' fontWeight={900} >
               {isLoading ? post.content :             
               <Skeleton
               animation="wave"
