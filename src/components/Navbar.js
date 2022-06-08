@@ -158,7 +158,7 @@ export default function Navbar() {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
-            backgroundColor:"#F6F6F6"
+            backgroundColor:"#FFFFFF"
           },
         }}
         variant="persistent"

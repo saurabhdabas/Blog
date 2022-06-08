@@ -52,7 +52,7 @@ const Home = () => {
     })
     setTimeout(()=>{
       setIsLoading(true)
-    },2000)
+    },1500)
 
   },[])
   
@@ -112,7 +112,7 @@ const Home = () => {
 
     return (
       <>
-      {isLoading ? <Card sx={{ width: 350, height: 240, backgroundColor:"#E9ECEF", cursor:"pointer"}} key={v4()}>
+      {isLoading ? <Card sx={{ width: 350, height: 240, backgroundColor:"#FFFFFF", cursor:"pointer"}} key={v4()}>
           <CardHeader
             title=
             {
@@ -127,7 +127,7 @@ const Home = () => {
               <Stack direction="row" spacing={5} mt={1} display='flex' justifyContent='space-between' alignItems='center' sx={{width:320}}>
                 <Box display='flex' flexDirection="row" alignItems='center'>
                   <CalendarTodayIcon sx={{marginRight:1, color:"#1976d2"}}/>
-                  <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Snowburst One', cursive">
+                  <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Snowburst One', cursive" fontWeight={700}>
                     {post.publishDate}
                   </Typography>
                 </Box>
@@ -181,7 +181,7 @@ const Home = () => {
   });
 
   return (
-    <Grid style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" }}>
+    <Grid style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" ,backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover'}}>
       <Navbar/>
       <Box sx={{ display: 'grid',gap: 4, gridTemplateColumns: 'repeat(3, 1fr)', marginTop:12,  marginLeft:25, marginRight:15 , minHeight: '100vh'}} >
         {posts}

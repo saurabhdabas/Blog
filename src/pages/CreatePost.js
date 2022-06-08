@@ -107,7 +107,7 @@ function CreatePost() {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" }}
+        style={{ minHeight: '100vh', backgroundColor: "#F6F6F6", backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}
       >
         <Paper elevation={3} 
           sx={{width:900, marginTop:15, marginBottom:10, backgroundColor:"#E9ECEF"}}>
@@ -122,13 +122,13 @@ function CreatePost() {
           sx={{width:900,backgroundColor:"#E9ECEF"}}
         >
           
-          <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Snowburst One', cursive">
+          <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Snowburst One', cursive" fontWeight={900}>
             Write a Story
           </Typography>
           
           <Box display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:800, marginTop:5, marginBottom:5}}>
             
-            <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Snowburst One', cursive">
+            <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Snowburst One', cursive" fontWeight={700}>
               <Box display='flex' flexDirection="row" alignItems='center'>
               <CalendarTodayIcon sx={{marginRight:1, color:"#1976d2"}}/> Publish On: {new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})}
               </Box>

@@ -122,7 +122,7 @@ const Post = () => {
 
 
   return (
-    <Grid sx={{backgroundColor:"#F6F6F6", minHeight:"100vh"}}>
+    <Grid sx={{backgroundColor:"#F6F6F6", minHeight:"100vh", backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}>
       <Navbar/>
       <Grid
         container
@@ -130,7 +130,7 @@ const Post = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Paper elevation={3} sx={{width:'70%', marginTop:15, marginBottom:15, backgroundColor:"#E9ECEF"}}>
+        <Paper elevation={3} sx={{width:'70%', marginTop:15, marginBottom:15, backgroundColor:"#FFFFFF"}}>
         <Box
           component="form"
           display="flex"
@@ -173,7 +173,7 @@ const Post = () => {
                     <CalendarTodayIcon/>
                   </IconButton>
                 </Tooltip>
-                <Typography variant="h6" noWrap component="div" fontSize={14} fontFamily="'Raleway', sans-serif">
+                <Typography variant="h6" noWrap component="div" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700}>
                   {post.publishDate}
                 </Typography>
               </Grid> :
@@ -211,18 +211,18 @@ const Post = () => {
           <Grid direction='row' alignItems='center' justifyContent='space-between' sx={{width:"99.5%", marginBottom:3}}>
             <Grid  container  display='flex' alignItems='center' justifyContent='start'>
                 <AccessTimeIcon sx={{marginRight:1, marginLeft:1,color:"#1976d2"}}/>
-                <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='start' sx={{marginRight:1}}>
+                <Typography variant="h6" noWrap component="span" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} textAlign='start' sx={{marginRight:1}}>
                   Read time:
                 </Typography>
             <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Roboto', sans-serif" textAlign='start'>{readTime}</Typography>
-            <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='start' sx={{marginLeft:1}}>minutes</Typography>
+            <Typography variant="h6" noWrap component="span" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} textAlign='start' sx={{marginLeft:1}}>minutes</Typography>
             <Grid  container  display='flex' alignItems='center' justifyContent='start' sx={{marginTop:1}}>
               <Tooltip title="Play" placement="left" >
                 <IconButton aria-label="Speak"  sx={{color:"#1976d2"}}>
                   {volume === "ON" ?  <VolumeUpIcon sx={{color:"#1976d2"}} onClick={handleVolume} cursor='pointer'/>   : <VolumeOffIcon sx={{color:"#1976d2"}} onClick={handleVolume} cursor='pointer'/> }
                 </IconButton>
               </Tooltip>
-              <Typography variant="h6" noWrap component="span" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='start' sx={{marginRight:1}}>
+              <Typography variant="h6" noWrap component="span" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} textAlign='start' sx={{marginRight:1}}>
                 Sound: {volume}
               </Typography>
             </Grid>
