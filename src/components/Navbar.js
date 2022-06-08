@@ -138,7 +138,7 @@ export default function Navbar() {
             <MenuIcon />
           </IconButton>
           <Grid display='flex' sx={{width:"100%"}} alignItems='center' justifyContent='space-between'>
-          <Typography variant="h6" noWrap component="div" fontSize={28}fontFamily="'Pacifico', cursive">
+          <Typography variant="h6" noWrap component="div" fontSize={28}fontFamily="'Snowburst One', cursive"  fontWeight={900}>
             Welcome back 👋🏼 ! {user.name}
           </Typography>
           <StyledBadge
@@ -167,7 +167,7 @@ export default function Navbar() {
       >
         <DrawerHeader sx={{padding:2}}>
           <Avatar alt={user.name} src="/story.png" sx={{height:100, width:100}}/>
-          <Typography fontFamily="'Raleway', sans-serif" ml={2}>StoryBook</Typography>
+          <Typography fontFamily="'Snowburst One', cursive" fontWeight={900} ml={2}>StoryBook</Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
@@ -179,7 +179,7 @@ export default function Navbar() {
                 <ListItemButton>
                   <ListItemIcon><HomeIcon sx={{color:"#1976d2"}}/></ListItemIcon>
                   <ListItemText primary= { 
-                    <Typography variant="h7" fontFamily="'Raleway', sans-serif" style={{ color: "black" }}>
+                    <Typography variant="h7" fontFamily="'Snowburst One', cursive" fontWeight={900} style={{ color: "black" }}>
                       Home
                     </Typography>}
                   />
@@ -191,7 +191,7 @@ export default function Navbar() {
                 <ListItemButton>
                   <ListItemIcon><CreateIcon sx={{color:"#1976d2"}}/></ListItemIcon>
                   <ListItemText primary= { 
-                    <Typography variant="h7" fontFamily="'Raleway', sans-serif" style={{ color: "black" }}>
+                    <Typography variant="h7" fontFamily="'Snowburst One', cursive"  fontWeight={900} style={{ color: "black" }}>
                       Write a Story
                     </Typography>}
                   />
@@ -203,7 +203,7 @@ export default function Navbar() {
                 <ListItemButton>
                   <ListItemIcon><ExitToAppIcon sx={{color:"#1976d2"}}/></ListItemIcon>
                   <ListItemText primary= { 
-                    <Typography variant="h7" fontFamily="'Raleway', sans-serif" style={{ color: "black" }}>
+                    <Typography variant="h7" fontFamily="'Snowburst One', cursive" fontWeight={900} style={{ color: "black" }}>
                       Logout
                     </Typography>}
                   />
