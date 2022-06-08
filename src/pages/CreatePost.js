@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Grid, Box, Typography, Avatar, Button, Chip, TextField, Paper } from  '@mui/material';
 import { styled } from '@mui/material/styles';
-import PublishIcon from '@mui/icons-material/Publish';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, storage } from '../firebase-config';
@@ -110,7 +110,7 @@ function CreatePost() {
         style={{ minHeight: '100vh', backgroundColor: "#F6F6F6", backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}
       >
         <Paper elevation={3} 
-          sx={{width:900, marginTop:15, marginBottom:10, backgroundColor:"#E9ECEF"}}>
+          sx={{width:900, marginTop:15, marginBottom:10, backgroundColor:"#FFFFFF",borderRadius:5}}>
         <Box
           component="div"
           display="flex"
@@ -119,7 +119,7 @@ function CreatePost() {
           padding={3}
           justifyContent="space-around"
           borderRadius={5}
-          sx={{width:900,backgroundColor:"#E9ECEF"}}
+          sx={{width:900,backgroundColor:"#FFFFFF"}}
         >
           
           <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Snowburst One', cursive" fontWeight={900}>
@@ -170,7 +170,7 @@ function CreatePost() {
           />
             <label htmlFor="select-image">
               <Button variant="contained" color="primary" component="span">
-                <Typography  fontFamily="'Raleway', sans-serif">
+                <Typography  fontFamily="'Snowburst One', cursive" fontWeight={700}>
                   Upload Image
                 </Typography>
               </Button>
@@ -209,8 +209,8 @@ function CreatePost() {
             sx={{ m: 1, width: 800 }}
             variant="contained"
             onClick={submitHandler}>
-            <PublishIcon/>
-            <Typography marginLeft={5} fontSize={18} fontFamily="'Raleway', sans-serif">
+            <AutoFixHighIcon/>
+            <Typography marginLeft={5} fontSize={18} fontFamily="'Snowburst One', cursive" fontWeight={700}>
               Publish Your Story
             </Typography>
           </BootstrapButton>

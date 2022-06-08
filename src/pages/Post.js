@@ -41,7 +41,21 @@ const Post = () => {
   img:"",
   author:{email:"",id:"",image:"",name:""}
   });
-  
+
+  useEffect(()=>{
+    list(imagesListRef).then((response) => {
+      response.items.forEach((item)=>{
+        getDownloadURL(item).then((url)=>{
+          let slicedImg = post.img.slice(27);
+          let slicedUrl = url.slice(78,114)
+          if(slicedImg === slicedUrl){
+            setImageURL(url);
+          }
+        })
+      })
+    });
+  },[post])
+
   useEffect(()=>{
     
     getDoc(doc(db, "posts", id))
@@ -64,28 +78,18 @@ const Post = () => {
     })
     setTimeout(()=>{
       setIsLoading(true)
-    },2000)
+    },3300)
   },[])
 
+
+
   useEffect(()=>{
-    list(imagesListRef).then((response) => {
-      response.items.forEach((item)=>{
-        getDownloadURL(item).then((url)=>{
-          let slicedImg = post.img.slice(27);
-          let slicedUrl = url.slice(78,114)
-          if(slicedImg === slicedUrl){
-            setImageURL(url);
-          }
-        })
-      })
-    });
     // Calculating total Read time
     const count = totalWords(post.content);
     setReadTime(`${(count/275).toFixed(2)}`);
   },[post])
 
   // Handle Speech 
-
   const handleVolume = () => {
     if(volume === "ON"){
       window.speechSynthesis.cancel();

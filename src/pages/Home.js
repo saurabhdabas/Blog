@@ -52,7 +52,7 @@ const Home = () => {
     })
     setTimeout(()=>{
       setIsLoading(true)
-    },1500)
+    },1200)
 
   },[])
   
@@ -149,13 +149,7 @@ const Home = () => {
               {post.content}
             </Typography>
           </CardContent>
-          {/* <CardMedia
-            component="img"
-            height="194"
-            image={post.imageSrc ? imageURL: "/NoImage.png"}
-            alt={post.title}
-            sx={{padding:1}}
-          /> */}
+
           <CardActions >
             <Grid container display='flex' alignItems='center' justifyContent='space-between' direction="row" >
             <Tooltip title="Share" placement="bottom">
