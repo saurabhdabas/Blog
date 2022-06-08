@@ -1,6 +1,6 @@
 import { React,useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper } from  '@mui/material';
+import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper, Stack } from  '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import IconButton from '@mui/material/IconButton';
@@ -10,10 +10,13 @@ import Navbar from '../components/Navbar';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+
 import totalWords from '../helpers/Words';
 
 import { db } from '../firebase-config';
-import { doc, getDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { storage } from "../firebase-config";
 import {
   ref,
@@ -31,7 +34,9 @@ const Post = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [readTime, setReadTime] = useState(0);
   const [volume, setVolume] = useState("Off");
-  
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
+
   const { id } = useParams();
   
   const [post, setPost] = useState({
@@ -39,6 +44,7 @@ const Post = () => {
   publishDate:"",
   content:"",
   img:"",
+  likes:0,
   author:{email:"",id:"",image:"",name:""}
   });
 
@@ -55,7 +61,7 @@ const Post = () => {
       })
     });
   },[post])
-
+  
   useEffect(()=>{
     
     getDoc(doc(db, "posts", id))
@@ -67,6 +73,7 @@ const Post = () => {
         publishDate:response.data().publishDate,
         content:response.data().content,
         img:response.data().imageSrc,
+        likes:response.data().likes,
         author:{
           email:response.data().author.email,
           id:response.data().author.id,
@@ -79,8 +86,32 @@ const Post = () => {
     setTimeout(()=>{
       setIsLoading(true)
     },3300)
-  },[])
+  })
 
+  // Handle Likes
+  const handleLiked = () => {
+    setLiked(true)
+  }
+  useEffect(()=>{
+    if(liked){
+      setLiked(false);
+      updateDoc(doc(db,"posts",id),{likes:likes})
+      .then(()=>{
+        setLikes(likes+1);
+        console.log("likesIncreased:",likes)
+        // setLiked(false);
+      })
+    // } else {
+    //   setLiked(true);
+    //   setLikes(likes-1);
+    //   updateDoc(doc(db,"posts",id),{likes:likes})
+    //   .then(()=>{
+    //     setLikes(likes-1);
+    //     console.log("likesDecreased:",likes)
+
+    //   })
+    }
+  })
 
 
   useEffect(()=>{
@@ -122,7 +153,6 @@ const Post = () => {
   const handleNavigation = () => {
     navigate(-1);
   }
-
 
 
   return (
@@ -169,7 +199,7 @@ const Post = () => {
           </Grid>
           <Grid display='flex' alignItems='center' justifyContent='space-between' sx={{width:"99.5%", marginTop:5, marginBottom:5}}>
 
-            <Typography variant="h6" noWrap component="div" fontSize={16}   fontFamily="'Raleway', sans-serif">
+            <Grid>
               { isLoading ? 
               <Grid display='flex' flexDirection="row" alignItems='center'>
                 <Tooltip title="Publish Date" placement="left" >
@@ -190,7 +220,7 @@ const Post = () => {
                 />
               </Grid>             
               }
-            </Typography>
+            </Grid>
             <Chip
               avatar={isLoading ? <Avatar alt={post.author.name} src={post.author.image}/> : <Skeleton animation="wave" variant="circular" width={20} height={20} />}
               label=
@@ -267,13 +297,12 @@ const Post = () => {
         
           </Grid>
         
-          {/* <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%'}}>
+          <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%'}}>
           <Tooltip title="Like" placement="right">
-            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}
-            onClick ={handleLikes}>
+            <IconButton aria-label="Home" onClick ={handleLiked} sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}>
               <ThumbUpIcon cursor="pointer" sx={{width:30, height:30}}/>
-              <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif" sx={{color:"#28A745"}}>
-                Likes : {likes}
+              <Typography variant="h6" noWrap component="div" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} sx={{color:"#28A745"}}>
+                Likes : {post.likes}
               </Typography>
             </IconButton>
           </Tooltip>
@@ -285,7 +314,8 @@ const Post = () => {
               </Typography>
             </IconButton>
           </Tooltip>
-          </Stack> */}
+          </Stack>
+          
         </Box>
         </Paper>
       </Grid>
