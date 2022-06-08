@@ -71,12 +71,12 @@ const HomeSkeleton = () => {
       <Grid container display='flex' alignItems='center' justifyContent='space-between' direction="row" >
       <Tooltip title="Share" placement="bottom">
         <IconButton aria-label="share" sx={{color:"#1976d2"}}>
-          <Skeleton animation="wave" variant="circular" width={28} height={28} />
+          <Skeleton animation="wave" variant="circular" width={20} height={20} />
         </IconButton>
         </Tooltip>
         <Tooltip title="View" placement="bottom">
         <IconButton aria-label="PageViewIcon" sx={{color:"#1976d2"}}>
-        <Skeleton animation="wave" variant="circular" width={28} height={28} />
+        <Skeleton animation="wave" variant="circular" width={20} height={20} />
         </IconButton>
         </Tooltip>
       </Grid>

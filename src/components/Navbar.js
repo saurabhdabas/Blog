@@ -136,7 +136,7 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" fontFamily="'Raleway', sans-serif">
+          <Typography variant="h6" noWrap component="div" fontSize={28}fontFamily="'Pacifico', cursive">
             Welcome back 👋🏼 ! {user.name}
           </Typography>
         </Toolbar>

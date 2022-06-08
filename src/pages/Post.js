@@ -132,7 +132,7 @@ const Post = () => {
           </Typography>
 
           {post.author.email === user.email ? isLoading ? <Tooltip title="Delete" placement="right">
-          <IconButton aria-label="delete"  onClick ={handlePostDelete} sx={{color:"#1976d2"}}>
+          <IconButton aria-label="delete"  onClick ={handlePostDelete} sx={{color:"#DC3545"}}>
             <DeleteIcon/>
           </IconButton>
           </Tooltip>: <Skeleton animation="wave" variant="circular" width={25} height={25} />
@@ -206,12 +206,10 @@ const Post = () => {
           }
           <Grid
             component="div"
-            textAlign="justify"
-            lineHeight="3"
             fontSize={16} 
             fontFamily="'Raleway', sans-serif"
           >
-            <Typography variant="h6" wrap="true" component="div" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='justify' paddingLeft={1.5} paddingRight={1.5} >
+            <Typography variant="h6" wrap="true" component="div" fontSize={16} fontFamily="'Raleway', sans-serif" textAlign='justify' paddingLeft={1.5} paddingRight={1.5} lineHeight='3' >
               {isLoading ? post.content :             
               <Skeleton
               animation="wave"
