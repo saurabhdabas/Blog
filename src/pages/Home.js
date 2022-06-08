@@ -169,7 +169,7 @@ const Home = () => {
   return (
     <Grid style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" ,backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover'}}>
       <Navbar/>
-      <Box sx={{ display: 'grid',gap: 2, gridTemplateColumns: 'repeat(3, 1fr)', marginTop:15,  marginLeft:25, marginRight:15 , minHeight: '100vh', justifyItems:'center'}} >
+      <Box sx={{ display: 'grid',gap: 2, gridTemplateColumns: 'repeat(3, 1fr)', paddingTop:15,  paddingLeft:25, paddingRight:25 ,paddingBottom:15, minHeight: '100vh', justifyItems:'center'}} >
         {posts}
       </Box>
     </Grid>
