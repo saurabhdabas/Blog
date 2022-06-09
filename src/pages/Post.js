@@ -134,7 +134,7 @@ const Post = () => {
   }
 
   useEffect(() => {
-    msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name == 'Samantha'})[0];
+    msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name === 'Samantha'})[0];
   }, [msg])
   
   // Retrieving user Info from local Storage

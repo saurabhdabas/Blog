@@ -104,8 +104,8 @@ const Login = () => {
         <BootstrapButton 
         display='inline-flex' 
         direction='row'
-        alignItems='center' 
-        justifyContent='space-between'  
+        alignitems='center' 
+        justifycontent='space-between'  
         sx={{ m: 1, width: '25ch' }} 
         variant="contained" 
         disableRipple 
