@@ -25,7 +25,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import Skeleton from '@mui/material/Skeleton';
 import HomeSkeleton from '../components/HomeSkeleton';
-import { v4 } from "uuid";
+
 
 import { doc, updateDoc } from "firebase/firestore";
 import { storage } from "../firebase-config";
@@ -98,7 +98,7 @@ const Home = () => {
 
     return (
       <>
-      {isLoading ? <Card sx={{ width: 350, height: 450, backgroundColor:"#FFFFFF", cursor:"pointer"}} key={v4()}>
+      {isLoading ? <Card sx={{ width: 350, height: 450, backgroundColor:"#FFFFFF", cursor:"pointer"}} key={post.id}>
           <CardHeader
             title=
             {
