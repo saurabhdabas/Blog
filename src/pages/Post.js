@@ -25,6 +25,7 @@ import {
 } from "firebase/storage";
 
 
+
 const Post = () => {
 
   const imagesListRef = ref(storage, "images/");
@@ -66,7 +67,9 @@ const Post = () => {
     
     getDoc(doc(db, "posts", id))
     .then((response)=>{
-      
+      console.log("post.currentLikes:",post.likes);
+      console.log("currentLikes:",likes);
+      console.log("response:",response.data())
       setPost((prevValue)=>({
         ...prevValue,
         title:response.data().title,
@@ -78,7 +81,7 @@ const Post = () => {
           email:response.data().author.email,
           id:response.data().author.id,
           image:response.data().author.img,
-          name:response.data().author.name
+          name:response.data().author.name,
         }
         })
       )
@@ -86,33 +89,22 @@ const Post = () => {
     setTimeout(()=>{
       setIsLoading(true)
     },3300)
-  })
+
+  },[likes])
 
   // Handle Likes
   const handleLiked = () => {
     setLiked(true)
+    setLikes((likes)=>likes+1);
   }
   useEffect(()=>{
     if(liked){
       setLiked(false);
-      updateDoc(doc(db,"posts",id),{likes:likes})
-      .then(()=>{
-        setLikes(likes+1);
-        console.log("likesIncreased:",likes)
-        // setLiked(false);
+      updateDoc(doc(db,"posts",id),{
+        likes:post.likes + likes,
       })
-    // } else {
-    //   setLiked(true);
-    //   setLikes(likes-1);
-    //   updateDoc(doc(db,"posts",id),{likes:likes})
-    //   .then(()=>{
-    //     setLikes(likes-1);
-    //     console.log("likesDecreased:",likes)
-
-    //   })
     }
-  })
-
+  },[id,liked,likes])
 
   useEffect(()=>{
     // Calculating total Read time
@@ -127,13 +119,14 @@ const Post = () => {
       setVolume("OFF")
     } else {
       setVolume("ON")
-      msg.text = post.content
-      msg.rate = 0.70
+
       window.speechSynthesis.speak(msg)
     }
   }
 
   useEffect(() => {
+    msg.text = post.content
+    msg.rate = 0.70
     msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name === 'Samantha'})[0];
   }, [msg])
   
@@ -201,7 +194,7 @@ const Post = () => {
 
             <Grid>
               { isLoading ? 
-              <Grid display='flex' flexDirection="row" alignItems='center'>
+              <Grid container display='flex' direction="row" alignItems='center'>
                 <Tooltip title="Publish Date" placement="left" >
                   <IconButton aria-label="Calendar"  sx={{color:"#1976d2"}}>
                     <CalendarTodayIcon/>
@@ -211,7 +204,7 @@ const Post = () => {
                   {post.publishDate}
                 </Typography>
               </Grid> :
-              <Grid display='flex' flexDirection="row" alignItems='center' justifyContent='space-between' sx={{width:"99.5%",marginLeft:0.8}}>
+              <Grid container display='flex' direction="row" alignItems='center' justifyContent='space-between' sx={{width:"99.5%",marginLeft:0.8}}>
                 <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
                 <Skeleton
                 animation="wave"
@@ -242,7 +235,7 @@ const Post = () => {
           {isLoading ? <img src={imageURL} alt="story" style={{borderRadius:'15px',boxShadow: "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px"}}width='700' height='200'/> : <Skeleton animation="wave" variant="rectangular" width={700} height={200}/>}
           </Grid>
           {isLoading ?
-          <Grid direction='row' alignItems='center' justifyContent='space-between' sx={{width:"99.5%", marginBottom:3}}>
+          <Grid container direction='row' alignItems='center' justifyContent='space-between' sx={{width:"99.5%", marginBottom:3}}>
             <Grid  container  display='flex' alignItems='center' justifyContent='start'>
                 <AccessTimeIcon sx={{marginRight:1, marginLeft:1,color:"#1976d2"}}/>
                 <Typography variant="h6" noWrap component="span" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} textAlign='start' sx={{marginRight:1}}>
@@ -252,8 +245,8 @@ const Post = () => {
             <Typography variant="h6" noWrap component="span" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} textAlign='start' sx={{marginLeft:1}}>minutes</Typography>
             <Grid  container  display='flex' alignItems='center' justifyContent='start' sx={{marginTop:1}}>
               <Tooltip title="Play" placement="left" >
-                <IconButton aria-label="Speak"  sx={{color:"#1976d2"}}>
-                  {volume === "ON" ?  <VolumeUpIcon sx={{color:"#1976d2"}} onClick={handleVolume} cursor='pointer'/>   : <VolumeOffIcon sx={{color:"#1976d2"}} onClick={handleVolume} cursor='pointer'/> }
+                <IconButton aria-label="Speak"  sx={{color:"#1976d2"}} onClick={handleVolume}>
+                  {volume === "ON" ?  <VolumeUpIcon sx={{color:"#1976d2"}}  cursor='pointer'/>   : <VolumeOffIcon sx={{color:"#1976d2"}} cursor='pointer'/> }
                 </IconButton>
               </Tooltip>
               <Typography variant="h6" noWrap component="span" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} textAlign='start' sx={{marginRight:1}}>
@@ -262,7 +255,7 @@ const Post = () => {
             </Grid>
             </Grid> 
           </Grid>:
-          <Grid display='flex' flexDirection="column" alignItems='center' justifyContent='start' sx={{width:"99.5%",marginLeft:0.8, marginBottom:5}}>
+          <Grid container display='flex' direction="column" alignItems='center' justifyContent='start' sx={{width:"99.5%",marginLeft:0.8, marginBottom:5}}>
             <Grid  container  display='flex' alignItems='center' justifyContent='start'>
               <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
               <Skeleton
@@ -297,23 +290,23 @@ const Post = () => {
         
           </Grid>
         
-          <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%'}}>
+          <Stack direction="row" display='flex' justifyContent='start' sx={{width:'100%'}}>
           <Tooltip title="Like" placement="right">
             <IconButton aria-label="Home" onClick ={handleLiked} sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}>
-              <ThumbUpIcon cursor="pointer" sx={{width:30, height:30}}/>
-              <Typography variant="h6" noWrap component="div" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} sx={{color:"#28A745"}}>
-                Likes : {post.likes}
-              </Typography>
+              <ThumbUpIcon cursor="pointer" sx={{width:40, height:20}}/>
             </IconButton>
           </Tooltip>
+          <Typography variant="h6" noWrap component="div" fontSize={18}   fontFamily="'Snowburst One', cursive" fontWeight={700} sx={{color:"#28A745"}}>
+                Likes : {post.likes}
+          </Typography>
           <Tooltip title="Dislike" placement="right">
             <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}} >
-              <ThumbDownIcon  cursor="pointer" sx={{width:30, height:30}}/>
-              <Typography variant="h6" noWrap component="div" fontSize={26} fontFamily="'Raleway', sans-serif" sx={{color:"#DC3545"}}>
-                D
-              </Typography>
+              <ThumbDownIcon  cursor="pointer" sx={{width:40, height:20}}/>
             </IconButton>
           </Tooltip>
+          <Typography variant="h6" noWrap component="div" fontSize={18}   fontFamily="'Snowburst One', cursive" fontWeight={700} sx={{color:"#DC3545"}}>
+                Dislikes
+          </Typography>
           </Stack>
           
         </Box>
