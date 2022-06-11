@@ -7,7 +7,7 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { addDoc, collection } from 'firebase/firestore';
 import { db, auth, storage } from '../firebase-config';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes } from 'firebase/storage';
 import { v4 } from "uuid";
 
 function CreatePost() {
