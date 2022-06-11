@@ -1,7 +1,7 @@
 import { React,useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper, Stack, Badge} from  '@mui/material';
+import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper, Stack, Badge, TextField, Button} from  '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import IconButton from '@mui/material/IconButton';
@@ -13,7 +13,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
-
+import AddCommentIcon from '@mui/icons-material/AddComment';
 import totalWords from '../helpers/Words';
 
 import { db } from '../firebase-config';
@@ -43,6 +43,10 @@ const Post = () => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
 
+  const [comment, setComment] = useState("");
+  const [clicked, setClicked] = useState(false);
+  const [comments, setComments] = useState([]);
+  
   const { id } = useParams();
   
   const [post, setPost] = useState({
@@ -52,7 +56,8 @@ const Post = () => {
     img:"",
     likes:0,
     dislikes:0,
-    author:{email:"",id:"",image:"",name:""}
+    comments:[],
+    author:{email:"",id:"",image:"",name:"",comment:""}
     });
   
     useEffect(()=>{
@@ -73,7 +78,7 @@ const Post = () => {
       
       getDoc(doc(db, "posts", id))
       .then((response)=>{
-
+        console.log("data:",response.data().comments);
         setPost((prevValue)=>({
           ...prevValue,
           title:response.data().title,
@@ -82,6 +87,7 @@ const Post = () => {
           img:response.data().imageSrc,
           likes:response.data().likes,
           dislikes:response.data().dislikes,
+          comments:response.data().comments,
           author:{
             email:response.data().author.email,
             id:response.data().author.id,
@@ -96,7 +102,32 @@ const Post = () => {
       },3300)
   
     },[likes,dislikes])
+
+  // Handle user's Input for posts's Comment
+  const handleComment = (event) => {
+    setComment(event.target.value);
+  };
   
+  const submitHandler = () => {
+    if(comment){
+      setClicked(true);
+    }
+  }
+  useEffect(() =>{
+    if(clicked){
+      setClicked(false);
+      setComments(comments => [...comments, comment])
+    }
+    setComment("");
+  },[clicked]);
+
+  useEffect(()=>{
+    if(comments.length){
+      updateDoc(doc(db,"posts",id),{comments:[...post.comments,...comments]})
+    }
+  })
+
+    console.log("comments:",comments);
     // Handle Likes
     const handleLiked = () => {
       setDisablelike(true);
@@ -180,8 +211,6 @@ const Post = () => {
     navigate(-1);
   }
 
-
-
   return (
     <Grid sx={{backgroundColor:"#F6F6F6", minHeight:"100vh", backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}>
       <Navbar/>
@@ -191,7 +220,7 @@ const Post = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Paper elevation={3} sx={{width:'70%', marginTop:15, marginBottom:15, backgroundColor:"#FFFFFF"}}>
+        <Paper elevation={3} sx={{width:'70%', marginTop:15, marginBottom:5, backgroundColor:"#FFFFFF"}}>
         <Box
           component="form"
           display="flex"
@@ -200,6 +229,8 @@ const Post = () => {
           padding={3}
           justifyContent="space-around"
           borderRadius={5}
+          marginTop={3}
+          marginBottom={3}
         >
           <Grid display='flex' alignItems='center' justifyContent='space-between' sx={{width:"100%"}}>
           {isLoading ? 
@@ -357,10 +388,45 @@ const Post = () => {
           <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
           <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
           </>
-} 
+        } 
           </Stack>
+          <Grid sx={{position:'absolute'}}></Grid>
+          <Grid  container  display='flex' alignItems='center' justifyContent='center' sx={{marginTop:1}}>
+          <Box sx={{backgroundImage:"url('/new.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'1000px 300px',position:'relative',top:"5px",width:"1020px",height:"180px"}}></Box>
+          <TextField
+            id="outlined-name"
+            label=
+            {
+            <Typography fontSize={20} fontFamily="'Snowburst One', cursive">
+              Comment
+            </Typography>
+            }
+            inputProps={{
+              maxLength: 50,
+            }}
+            value={comment}
+            onChange={handleComment}
+            sx={{width:800, marginBottom:5}}
+          />
+          <Button
+            direction='row'
+            sx={{ m: 1, width: 800 }}
+            variant="contained"
+            onClick={submitHandler}>
+            <AddCommentIcon/>
+            <Typography marginLeft={5} fontSize={18} fontFamily="'Snowburst One', cursive" fontWeight={700}>
+              POST COMMENT
+            </Typography>
+          </Button>
+          </Grid>
           
         </Box>
+        </Paper>
+        <Paper elevation={3} sx={{width:'70%', marginTop:5, marginBottom:5, backgroundColor:"#FFFFFF"}}>
+        {post.comments.map((comment)=>{
+            return (<Typography fontSize={20} fontFamily="'Snowburst One', cursive">{comment}</Typography>)
+          })}
+          
         </Paper>
       </Grid>
     </Grid>
