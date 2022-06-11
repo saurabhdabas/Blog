@@ -1,6 +1,7 @@
 import { React,useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper, Stack } from  '@mui/material';
+
+import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper, Stack, Badge} from  '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import IconButton from '@mui/material/IconButton';
@@ -10,8 +11,8 @@ import Navbar from '../components/Navbar';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 
 import totalWords from '../helpers/Words';
 
@@ -35,7 +36,8 @@ const Post = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [readTime, setReadTime] = useState(0);
   const [volume, setVolume] = useState("Off");
-  const [disable, setDisable] = useState(false);
+  const [disablelike, setDisablelike] = useState(false);
+  const [disableUnlike, setDisableUnlike] = useState(false);
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -49,6 +51,7 @@ const Post = () => {
     content:"",
     img:"",
     likes:0,
+    dislikes:0,
     author:{email:"",id:"",image:"",name:""}
     });
   
@@ -78,6 +81,7 @@ const Post = () => {
           content:response.data().content,
           img:response.data().imageSrc,
           likes:response.data().likes,
+          dislikes:response.data().dislikes,
           author:{
             email:response.data().author.email,
             id:response.data().author.id,
@@ -91,11 +95,11 @@ const Post = () => {
         setIsLoading(true)
       },3300)
   
-    },[likes])
+    },[likes,dislikes])
   
     // Handle Likes
     const handleLiked = () => {
-      setDisable(true);
+      setDisablelike(true);
       setLiked(true);
       setLikes((likes)=>likes+1);
     }
@@ -111,24 +115,29 @@ const Post = () => {
             likes:post.likes + likes,
           })
         }
-
       }
     },[id,liked,likes])
 
   // Handle Dislikes
-  // const handleDisliked = () => {
-  //   setDisliked(true)
-  //   setDislikes((dislikes)=>dislikes+1);
-  // }
-  // useEffect(()=>{
-  //   if(disliked){
-  //     setDisliked(false);
-  //     updateDoc(doc(db,"posts",id),{
-  //       dislikes:Number(post.dislikes + dislikes),
-  //     })
-  //     console.log("post.dislikes:",dislikes);
-  //   }
-  // },[id,disliked,dislikes])
+  const handleDisliked = () => {
+    setDisableUnlike(true);
+    setDisliked(true)
+    setDislikes((dislikes)=>dislikes+1);
+  }
+  useEffect(()=>{
+    if(disliked){
+      setDisliked(false);
+      if(!post.dislikes){
+        updateDoc(doc(db,"posts",id),{
+          dislikes:dislikes,
+        })
+      } else {
+        updateDoc(doc(db,"posts",id),{
+          dislikes:post.dislikes + dislikes,
+        })
+      }
+    }
+  },[id,disliked,dislikes])
 
   useEffect(()=>{
     // Calculating total Read time
@@ -172,6 +181,7 @@ const Post = () => {
   }
 
 
+
   return (
     <Grid sx={{backgroundColor:"#F6F6F6", minHeight:"100vh", backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}>
       <Navbar/>
@@ -192,11 +202,20 @@ const Post = () => {
           borderRadius={5}
         >
           <Grid display='flex' alignItems='center' justifyContent='space-between' sx={{width:"100%"}}>
-          <Tooltip title="Home" placement="right" >
-            <IconButton aria-label="Home"  onClick = {handleNavigation} sx={{color:"#1976d2"}}>
-              {isLoading ? <HomeIcon />  : <Skeleton animation="wave" variant="circular" width={25} height={25} />}
-            </IconButton>
-          </Tooltip>
+          {isLoading ? 
+              <Grid sx={{width:"9%"}}container display='flex' direction="row" alignItems='center'>
+              <Tooltip title="Home" placement="left" >
+                <IconButton aria-label="Home"  sx={{color:"#1976d2"}} onClick={handleNavigation}>
+                <HomeIcon />
+                </IconButton>
+              </Tooltip>
+              <Typography variant="h6" noWrap component="div" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700}>
+                Home
+              </Typography>
+            </Grid>
+              : <Grid marginLeft={1.2}>
+                <Skeleton animation="wave" variant="circular" width={25} height={25} />
+                </Grid>}
           <Typography variant="h6" noWrap component="div" fontSize={26}   fontFamily="'Snowburst One', cursive" textAlign='center'sx={{ textTransform: 'uppercase', width:'50%'}}>
             {isLoading ? post.title :           
             <Skeleton
@@ -255,13 +274,15 @@ const Post = () => {
               variant="outlined" 
             />
           </Grid>
-          <Grid sx={{marginBottom:5}}>
+          <Grid sx={{marginBottom:5,marginTop:5}}>
           {isLoading ? <img src={imageURL} alt="story" style={{borderRadius:'15px',boxShadow: "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px"}}width='700' height='200'/> : <Skeleton animation="wave" variant="rectangular" width={700} height={200}/>}
           </Grid>
           {isLoading ?
-          <Grid container direction='row' alignItems='center' justifyContent='space-between' sx={{width:"99.5%", marginBottom:3}}>
+          <Grid container direction='row' alignItems='center' justifyContent='space-between' sx={{width:"99.5%", marginBottom:5, marginTop:5}}>
             <Grid  container  display='flex' alignItems='center' justifyContent='start'>
-                <AccessTimeIcon sx={{marginRight:1, marginLeft:1,color:"#1976d2"}}/>
+                <Tooltip title="Read Time" placement="left">
+                  <AccessTimeIcon sx={{marginRight:1, marginLeft:1,color:"#1976d2"}}/>
+                </Tooltip>
                 <Typography variant="h6" noWrap component="span" fontSize={14}   fontFamily="'Snowburst One', cursive" fontWeight={700} textAlign='start' sx={{marginRight:1}}>
                   Read time:
                 </Typography>
@@ -279,7 +300,7 @@ const Post = () => {
             </Grid>
             </Grid> 
           </Grid>:
-          <Grid container display='flex' direction="column" alignItems='center' justifyContent='start' sx={{width:"99.5%",marginLeft:0.8, marginBottom:5}}>
+          <Grid container display='flex' direction="column" alignItems='center' justifyContent='start' sx={{width:"99.5%",marginLeft:0.8, marginBottom:5, marginTop:5}}>
             <Grid  container  display='flex' alignItems='center' justifyContent='start'>
               <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
               <Skeleton
@@ -314,23 +335,29 @@ const Post = () => {
         
           </Grid>
         
-          <Stack direction="row" display='flex' justifyContent='start' sx={{width:'100%'}}>
-          <Tooltip title="Like" placement="right">
-            <IconButton disabled={disable} aria-label="Home" onClick ={handleLiked} sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}>
-              <ThumbUpIcon cursor="pointer" sx={{width:40, height:20}}/>
-            </IconButton>
-          </Tooltip>
-          <Typography variant="h6" noWrap component="div" fontSize={18}   fontFamily="'Snowburst One', cursive" fontWeight={700} sx={{color:"#28A745"}}>
-                Likes : {post.likes ? post.likes : likes}
-          </Typography>
-          {/* <Tooltip title="Dislike" placement="right">
-            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}} onClick ={handleDisliked} >
-              <ThumbDownIcon  cursor="pointer" sx={{width:40, height:20}}/>
-            </IconButton>
-          </Tooltip>
-          <Typography variant="h6" noWrap component="div" fontSize={18}   fontFamily="'Snowburst One', cursive" fontWeight={700} sx={{color:"#DC3545"}}>
-                Dislikes : {post.dislikes}
-          </Typography> */}
+          <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%',marginTop:5}}>
+          {isLoading ? 
+          <>
+            <Tooltip title="Like" placement="right">
+              <IconButton disabled={disablelike} aria-label="Like" onClick ={handleLiked} sx={{color:"#DC3545"}}>
+              <Badge badgeContent={post.likes ? post.likes : likes} color="error">
+                <FavoriteBorderIcon cursor="pointer" sx={{width:30, height:30}}/>
+              </Badge>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Dislike" placement="right">
+              <IconButton disabled={disableUnlike} aria-label="Dislike" sx={{color:"#DC3545"}} onClick ={handleDisliked} >
+              <Badge badgeContent={post.dislikes ? post.dislikes : dislikes} color="error">
+                <HeartBrokenIcon  cursor="pointer" sx={{width:30, height:30}}/>
+              </Badge>
+              </IconButton>
+            </Tooltip>
+          </> 
+          : <>
+          <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
+          <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
+          </>
+} 
           </Stack>
           
         </Box>
