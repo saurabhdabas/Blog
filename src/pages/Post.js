@@ -35,76 +35,100 @@ const Post = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [readTime, setReadTime] = useState(0);
   const [volume, setVolume] = useState("Off");
+  const [disable, setDisable] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
   const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
 
   const { id } = useParams();
   
   const [post, setPost] = useState({
-  title:"",
-  publishDate:"",
-  content:"",
-  img:"",
-  likes:0,
-  author:{email:"",id:"",image:"",name:""}
-  });
-
-  useEffect(()=>{
-    list(imagesListRef).then((response) => {
-      response.items.forEach((item)=>{
-        getDownloadURL(item).then((url)=>{
-          let slicedImg = post.img.slice(27);
-          let slicedUrl = url.slice(78,114)
-          if(slicedImg === slicedUrl){
-            setImageURL(url);
-          }
-        })
-      })
+    title:"",
+    publishDate:"",
+    content:"",
+    img:"",
+    likes:0,
+    author:{email:"",id:"",image:"",name:""}
     });
-  },[post])
   
-  useEffect(()=>{
-    
-    getDoc(doc(db, "posts", id))
-    .then((response)=>{
-      console.log("post.currentLikes:",post.likes);
-      console.log("currentLikes:",likes);
-      console.log("response:",response.data())
-      setPost((prevValue)=>({
-        ...prevValue,
-        title:response.data().title,
-        publishDate:response.data().publishDate,
-        content:response.data().content,
-        img:response.data().imageSrc,
-        likes:response.data().likes,
-        author:{
-          email:response.data().author.email,
-          id:response.data().author.id,
-          image:response.data().author.img,
-          name:response.data().author.name,
-        }
+    useEffect(()=>{
+      list(imagesListRef).then((response) => {
+        response.items.forEach((item)=>{
+          getDownloadURL(item).then((url)=>{
+            let slicedImg = post.img.slice(27);
+            let slicedUrl = url.slice(78,114)
+            if(slicedImg === slicedUrl){
+              setImageURL(url);
+            }
+          })
         })
-      )
-    })
-    setTimeout(()=>{
-      setIsLoading(true)
-    },3300)
+      });
+    },[post])
+    
+    useEffect(()=>{
+      
+      getDoc(doc(db, "posts", id))
+      .then((response)=>{
 
-  },[likes])
-
-  // Handle Likes
-  const handleLiked = () => {
-    setLiked(true)
-    setLikes((likes)=>likes+1);
-  }
-  useEffect(()=>{
-    if(liked){
-      setLiked(false);
-      updateDoc(doc(db,"posts",id),{
-        likes:post.likes + likes,
+        setPost((prevValue)=>({
+          ...prevValue,
+          title:response.data().title,
+          publishDate:response.data().publishDate,
+          content:response.data().content,
+          img:response.data().imageSrc,
+          likes:response.data().likes,
+          author:{
+            email:response.data().author.email,
+            id:response.data().author.id,
+            image:response.data().author.img,
+            name:response.data().author.name,
+          }
+          })
+        )
       })
+      setTimeout(()=>{
+        setIsLoading(true)
+      },3300)
+  
+    },[likes])
+  
+    // Handle Likes
+    const handleLiked = () => {
+      setDisable(true);
+      setLiked(true);
+      setLikes((likes)=>likes+1);
     }
-  },[id,liked,likes])
+    useEffect(()=>{
+      if(liked){
+        setLiked(false);
+        if(!post.likes){
+          updateDoc(doc(db,"posts",id),{
+            likes:likes,
+          })
+        } else {
+          updateDoc(doc(db,"posts",id),{
+            likes:post.likes + likes,
+          })
+        }
+
+      }
+    },[id,liked,likes])
+
+  // Handle Dislikes
+  // const handleDisliked = () => {
+  //   setDisliked(true)
+  //   setDislikes((dislikes)=>dislikes+1);
+  // }
+  // useEffect(()=>{
+  //   if(disliked){
+  //     setDisliked(false);
+  //     updateDoc(doc(db,"posts",id),{
+  //       dislikes:Number(post.dislikes + dislikes),
+  //     })
+  //     console.log("post.dislikes:",dislikes);
+  //   }
+  // },[id,disliked,dislikes])
 
   useEffect(()=>{
     // Calculating total Read time
@@ -292,21 +316,21 @@ const Post = () => {
         
           <Stack direction="row" display='flex' justifyContent='start' sx={{width:'100%'}}>
           <Tooltip title="Like" placement="right">
-            <IconButton aria-label="Home" onClick ={handleLiked} sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}>
+            <IconButton disabled={disable} aria-label="Home" onClick ={handleLiked} sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}}>
               <ThumbUpIcon cursor="pointer" sx={{width:40, height:20}}/>
             </IconButton>
           </Tooltip>
           <Typography variant="h6" noWrap component="div" fontSize={18}   fontFamily="'Snowburst One', cursive" fontWeight={700} sx={{color:"#28A745"}}>
-                Likes : {post.likes}
+                Likes : {post.likes ? post.likes : likes}
           </Typography>
-          <Tooltip title="Dislike" placement="right">
-            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}} >
+          {/* <Tooltip title="Dislike" placement="right">
+            <IconButton aria-label="Home" sx={{color:"#1976d2",backgroundColor:"#FFFFFF"}} onClick ={handleDisliked} >
               <ThumbDownIcon  cursor="pointer" sx={{width:40, height:20}}/>
             </IconButton>
           </Tooltip>
           <Typography variant="h6" noWrap component="div" fontSize={18}   fontFamily="'Snowburst One', cursive" fontWeight={700} sx={{color:"#DC3545"}}>
-                Dislikes
-          </Typography>
+                Dislikes : {post.dislikes}
+          </Typography> */}
           </Stack>
           
         </Box>
