@@ -43,10 +43,9 @@ const Post = () => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
 
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState({data:"",name:"",img:""});
   const [clicked, setClicked] = useState(false);
   const [comments, setComments] = useState([]);
-  
   const { id } = useParams();
   
   const [post, setPost] = useState({
@@ -57,7 +56,7 @@ const Post = () => {
     likes:0,
     dislikes:0,
     comments:[],
-    author:{email:"",id:"",image:"",name:"",comment:""}
+    author:{email:"",id:"",image:"",name:""}
     });
   
     useEffect(()=>{
@@ -78,7 +77,7 @@ const Post = () => {
       
       getDoc(doc(db, "posts", id))
       .then((response)=>{
-        console.log("data:",response.data().comments);
+        console.log("data:",response.data());
         setPost((prevValue)=>({
           ...prevValue,
           title:response.data().title,
@@ -101,33 +100,33 @@ const Post = () => {
         setIsLoading(true)
       },3300)
   
-    },[likes,dislikes])
+    },[likes,dislikes,comments])
 
   // Handle user's Input for posts's Comment
   const handleComment = (event) => {
-    setComment(event.target.value);
+    setComment({data:event.target.value,name:post.author.name, img:post.author.image});
   };
   
   const submitHandler = () => {
     if(comment){
       setClicked(true);
+      setComments([comment]);
     }
   }
   useEffect(() =>{
     if(clicked){
       setClicked(false);
-      setComments(comments => [...comments, comment])
+      updateDoc(doc(db,"posts",id),{comments:[...post.comments,...comments]});
     }
-    setComment("");
-  },[clicked]);
-
-  useEffect(()=>{
-    if(comments.length){
-      updateDoc(doc(db,"posts",id),{comments:[...post.comments,...comments]})
-    }
-  })
+    setComment({data:"", name:"",img:""});
+  },[id,clicked,comments]);
 
     console.log("comments:",comments);
+
+    // useEffect(()=>{
+    //   updateDoc(doc(db,"posts",id),{comments:[...comments]});
+
+    // },[id,comments])
     // Handle Likes
     const handleLiked = () => {
       setDisablelike(true);
@@ -390,7 +389,6 @@ const Post = () => {
           </>
         } 
           </Stack>
-          <Grid sx={{position:'absolute'}}></Grid>
           <Grid  container  display='flex' alignItems='center' justifyContent='center' sx={{marginTop:1}}>
           <Box sx={{backgroundImage:"url('/new.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'1000px 300px',position:'relative',top:"5px",width:"1020px",height:"180px"}}></Box>
           <TextField
@@ -404,7 +402,7 @@ const Post = () => {
             inputProps={{
               maxLength: 50,
             }}
-            value={comment}
+            value={comment.data}
             onChange={handleComment}
             sx={{width:800, marginBottom:5}}
           />
@@ -424,9 +422,8 @@ const Post = () => {
         </Paper>
         <Paper elevation={3} sx={{width:'70%', marginTop:5, marginBottom:5, backgroundColor:"#FFFFFF"}}>
         {post.comments.map((comment)=>{
-            return (<Typography fontSize={20} fontFamily="'Snowburst One', cursive">{comment}</Typography>)
+            return (<Typography fontSize={20} fontFamily="'Snowburst One', cursive">{comment.data}</Typography>)
           })}
-          
         </Paper>
       </Grid>
     </Grid>
