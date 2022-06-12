@@ -17,13 +17,14 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import totalWords from '../helpers/Words';
 
 import { db } from '../firebase-config';
-import { doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { storage } from "../firebase-config";
 import {
   ref,
   getDownloadURL,
   list
 } from "firebase/storage";
+
 
 
 
@@ -45,10 +46,11 @@ const Post = () => {
   const [disliked, setDisliked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
-
+  
   const [comment, setComment] = useState({data:"",name:"",img:"",email:"",date:""});
   const [clicked, setClicked] = useState(false);
   const [comments, setComments] = useState([]);
+  const [del,setDel] = useState(false);
   const { id } = useParams();
   
   const [post, setPost] = useState({
@@ -103,10 +105,11 @@ const Post = () => {
         setIsLoading(true)
       },3300)
   
-    },[likes,dislikes,comments])
+    },[likes,dislikes,comments,del])
 
   // Handle user's Input for posts's Comment
   const handleComment = (event) => {
+    console.log("user.id:",user.id);
     setComment({data:event.target.value,name:user.name, img:user.photo,email:user.email,
     date:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})
     });
@@ -126,7 +129,7 @@ const Post = () => {
     setComment({data:"",name:"",img:"",email:"",date:""});
   },[id,clicked,comments]);
 
-    console.log("comments:",comments);
+    
 
     // Handle Likes
     const handleLiked = () => {
@@ -194,14 +197,35 @@ const Post = () => {
     msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name === 'Samantha'})[0];
   }, [msg])
   
+  
   // Delete the Comment when clicked
-  const handleCommentDelete = (event) => {
-    event.preventDefault();
-    // deleteDoc(doc(db, "posts", id),{comments:[]}).then(()=>{
-    //   navigate('/home')
-    // })
+  const handleCommentDelete = () => {
+    setDel(true);
+    
   }
+  const findCommentByEmail = (arr,email) => {
+   return arr.filter((comment)=>{
+      return comment.email === email
+    })
+  }
+  useEffect(()=>{
+    console.log("del:",del)
+    if(del){
 
+      if(post.comments.length && user.email) {
+
+        const result = findCommentByEmail(post.comments,user.email);
+        const key = result[0]
+        
+        console.log("Did It get deleted ??")
+        updateDoc(doc(db,"posts",id), {
+          ["comments"]: arrayRemove({...result[0]})
+        });
+        setDel(false);
+      }
+
+    }
+  },[del])
 
   // Delete the post when clicked
   const handlePostDelete = (event) => {
@@ -365,23 +389,58 @@ const Post = () => {
               {isLoading ? post.content :             
               <Skeleton
               animation="wave"
-              height={300}
-              width='1050px'
+              height={500}
+              width='940px'
             />}
             </Typography>
         
           </Grid>
-        
+
+          <Grid  container  display='flex' alignItems='center' justifyContent='center' sx={{marginTop:1}}>
+          {isLoading 
+            ?
+            <>
+            <Box sx={{backgroundImage:"url('/new.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'1000px 300px',position:'relative',top:"5px",width:"1020px",height:"180px"}}></Box>
+            <TextField
+              id="outlined-name"
+              label=
+              {
+              <Typography fontSize={20} fontFamily="'Snowburst One', cursive">
+                Comment
+              </Typography>
+              }
+              inputProps={{
+                maxLength: 50,
+              }}
+              value={comment.data}
+              onChange={handleComment}
+              sx={{width:800, marginBottom:5}}
+            />
+            </> 
+
+            : <Skeleton  animation="wave" variant="rectangular" width={950} height={250} /> 
+            }
+          
           <Stack direction="row" display='flex' justifyContent='space-between' sx={{width:'100%',marginTop:5}}>
           {isLoading ? 
           <>
-            <Tooltip title="Like" placement="right">
+            <Tooltip title="Like" placement="left">
               <IconButton disabled={disablelike} aria-label="Like" onClick ={handleLiked} sx={{color:"#DC3545"}}>
               <Badge badgeContent={post.likes ? post.likes : likes} color="error">
                 <FavoriteBorderIcon cursor="pointer" sx={{width:30, height:30}}/>
               </Badge>
               </IconButton>
             </Tooltip>
+            <Button
+            direction='row'
+            sx={{ m: 1, width: 800 }}
+            variant="contained"
+            onClick={submitHandler}>
+            <AddCommentIcon/>
+            <Typography marginLeft={5} fontSize={18} fontFamily="'Snowburst One', cursive" fontWeight={700}>
+              POST COMMENT
+            </Typography>
+          </Button>
             <Tooltip title="Dislike" placement="right">
               <IconButton disabled={disableUnlike} aria-label="Dislike" sx={{color:"#DC3545"}} onClick ={handleDisliked} >
               <Badge badgeContent={post.dislikes ? post.dislikes : dislikes} color="error">
@@ -392,79 +451,55 @@ const Post = () => {
           </> 
           : <>
           <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
-          <Skeleton sx={{marginRight:1}} animation="wave" variant="circular" width={25} height={25} />
+          <Skeleton animation="wave" variant="rectangular" width={900} height={25} />
+          <Skeleton sx={{marginLeft:1}} animation="wave" variant="circular" width={25} height={25} />
           </>
         } 
-          </Stack>
-          <Grid  container  display='flex' alignItems='center' justifyContent='center' sx={{marginTop:1}}>
-          <Box sx={{backgroundImage:"url('/new.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'1000px 300px',position:'relative',top:"5px",width:"1020px",height:"180px"}}></Box>
-          <TextField
-            id="outlined-name"
-            label=
-            {
-            <Typography fontSize={20} fontFamily="'Snowburst One', cursive">
-              Comment
-            </Typography>
-            }
-            inputProps={{
-              maxLength: 50,
-            }}
-            value={comment.data}
-            onChange={handleComment}
-            sx={{width:800, marginBottom:5}}
-          />
-          <Button
-            direction='row'
-            sx={{ m: 1, width: 800 }}
-            variant="contained"
-            onClick={submitHandler}>
-            <AddCommentIcon/>
-            <Typography marginLeft={5} fontSize={18} fontFamily="'Snowburst One', cursive" fontWeight={700}>
-              POST COMMENT
-            </Typography>
-          </Button>
-          </Grid>
+        </Stack>
+        </Grid>
           
         </Box>
         </Paper>
-        {/* <Typography fontSize={20} fontFamily="'Snowburst One', cursive">{comment.data}</Typography> */}
+
         <Paper elevation={3} sx={{width:'70%', marginTop:5, marginBottom:5, backgroundColor:"#FFFFFF"}}>
-        <Grid container display='flex' direction='column' alignitems='center' justifycontent='center' wrap="nowrap" spacing={2} sx={{padding:5}}>
-        {post.comments.map((comment)=>{
+        
+          {post.comments.map((comment)=>{
             return (
-              <Grid sx={{padding:1}}>
+              <Grid container display='flex' direction='column' alignitems='center' justifycontent='center' wrap="nowrap" sx={{padding:2}}>
+              <Grid sx={{backgroundColor:"#F3F3F3", padding:1}}>
               <Grid container display='flex' direction='row' alignItems='center' justifyContent='space-between' sx={{marginTop:1,marginBottom:1}}>
               <Chip
-                avatar={<Avatar alt={comment.name} src={comment.img} />}
-                label={<Typography fontSize={16} fontFamily="'Raleway', sans-serif" sx={{ textAlign: "left"}}>{comment.name}</Typography>}
+                avatar={isLoading ? 
+                <Avatar alt={comment.name} src={comment.img} />
+                : <Skeleton  animation="wave" variant="circular" width={25} height={25} />
+              }
+                label={<Typography fontSize={16} fontFamily="'Raleway', sans-serif" sx={{ textAlign: "left"}}>{isLoading ? comment.name : <Skeleton  animation="wave" variant="rectangular" width={70} height={15} />}</Typography>}
                 variant="outlined"
               />
-              {comment.email === user.email  ? <Tooltip title="Delete" placement="right">
+              {comment.email === user.email  && <Tooltip title="Delete" placement="right">
               <IconButton aria-label="delete"  onClick ={handleCommentDelete} sx={{color:"#DC3545"}}>
                 <DeleteIcon/>
               </IconButton>
-              </Tooltip>
-              // : <Skeleton animation="wave" variant="circular" width={25} height={25} />
-               : 
-                <div style={{width:25 ,height:25}}></div>
+              </Tooltip> 
               }
               </Grid>
 
               <Grid container display='flex' direction='column' alignItems='center' alignContent='flex-start' sx={{marginTop:1,marginBottom:1}}>
                 <Typography fontSize={20} fontFamily="'Snowburst One', cursive">
-                  {comment.data}
+                  {isLoading ? comment.data : <Skeleton  animation="wave" variant="rectangular" width={900} height={25} />}
                 </Typography>
               </Grid>
               <Grid container display='flex' direction='column' alignItems='center' alignContent='flex-start' sx={{marginTop:1,marginBottom:1}}>
                 <Typography textAlign='start' fontFamily="'Raleway', sans-serif" sx={{color: "gray" }}>
-                  {comment.date}
+                  {isLoading ? comment.date : <Skeleton  animation="wave" variant="rectangular" width={90} height={15} />}
                 </Typography>
               </Grid>
               <Divider variant="fullWidth"/>
               </Grid>
+              </Grid>
             );
           })}
-        </Grid>
+
         </Paper>
       </Grid>
     </Grid>
