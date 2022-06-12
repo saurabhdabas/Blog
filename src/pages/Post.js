@@ -14,6 +14,8 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import AddCommentIcon from '@mui/icons-material/AddComment';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+
 import totalWords from '../helpers/Words';
 
 import { db } from '../firebase-config';
@@ -216,7 +218,7 @@ const Post = () => {
 
         const result = findCommentByEmail(post.comments,user.email);
         const key = result[0]
-        
+        console.log("result:",result);
         console.log("Did It get deleted ??")
         updateDoc(doc(db,"posts",id), {
           ["comments"]: arrayRemove({...result[0]})
@@ -336,7 +338,7 @@ const Post = () => {
             />
           </Grid>
           <Grid sx={{marginBottom:5,marginTop:5}}>
-          {isLoading ? <img src={imageURL} alt="story" style={{borderRadius:'15px',boxShadow: "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px"}}width='700' height='200'/> : <Skeleton animation="wave" variant="rectangular" width={700} height={200}/>}
+          {isLoading ? <img src={imageURL} alt="story" style={{borderRadius:'15px',boxShadow: "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px"}}width='700' height='300'/> : <Skeleton animation="wave" variant="rectangular" width={700} height={300}/>}
           </Grid>
           {isLoading ?
           <Grid container direction='row' alignItems='center' justifyContent='space-between' sx={{width:"99.5%", marginBottom:5, marginTop:5}}>
@@ -440,7 +442,7 @@ const Post = () => {
             <Typography marginLeft={5} fontSize={18} fontFamily="'Snowburst One', cursive" fontWeight={700}>
               POST COMMENT
             </Typography>
-          </Button>
+            </Button>
             <Tooltip title="Dislike" placement="right">
               <IconButton disabled={disableUnlike} aria-label="Dislike" sx={{color:"#DC3545"}} onClick ={handleDisliked} >
               <Badge badgeContent={post.dislikes ? post.dislikes : dislikes} color="error">
@@ -460,9 +462,9 @@ const Post = () => {
           
         </Box>
         </Paper>
-
-        <Paper elevation={3} sx={{width:'70%', marginTop:5, marginBottom:5, backgroundColor:"#FFFFFF",maxHeight:330, overflow:"scroll"}}>
-        
+        {post.comments 
+          ? <Paper elevation={3} sx={{width:'70%', marginTop:5, marginBottom:5, backgroundColor:"#FFFFFF",maxHeight:330, overflow:"scroll"}}>
+          
           {post.comments.map((comment)=>{
             return (
               <Grid container display='flex' direction='column' alignitems='center' justifycontent='center' wrap="nowrap" sx={{padding:2}} >
@@ -499,8 +501,11 @@ const Post = () => {
               </Grid>
             );
           })}
-
         </Paper>
+        : <div></div>
+        }
+        <ArrowCircleUpIcon sx={{ m: 1, width: 50 , height: 100, color:"#1976d2"}}/>
+
       </Grid>
     </Grid>
   );
