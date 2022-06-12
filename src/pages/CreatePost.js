@@ -58,6 +58,7 @@ function CreatePost() {
         title : title,
         imageSrc : imageUrl,
         content: content,
+        comments:[],
         publishDate:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"}),
         author: {name:auth.currentUser.displayName, id:auth.currentUser.uid, email:auth.currentUser.email, img:auth.currentUser.photoURL}
       })
