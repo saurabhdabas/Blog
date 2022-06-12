@@ -461,11 +461,11 @@ const Post = () => {
         </Box>
         </Paper>
 
-        <Paper elevation={3} sx={{width:'70%', marginTop:5, marginBottom:5, backgroundColor:"#FFFFFF"}}>
+        <Paper elevation={3} sx={{width:'70%', marginTop:5, marginBottom:5, backgroundColor:"#FFFFFF",maxHeight:330, overflow:"scroll"}}>
         
           {post.comments.map((comment)=>{
             return (
-              <Grid container display='flex' direction='column' alignitems='center' justifycontent='center' wrap="nowrap" sx={{padding:2}}>
+              <Grid container display='flex' direction='column' alignitems='center' justifycontent='center' wrap="nowrap" sx={{padding:2}} >
               <Grid sx={{backgroundColor:"#F3F3F3", padding:1}}>
               <Grid container display='flex' direction='row' alignItems='center' justifyContent='space-between' sx={{marginTop:1,marginBottom:1}}>
               <Chip
