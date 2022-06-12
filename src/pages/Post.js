@@ -1,7 +1,7 @@
 import { React,useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper, Stack, Badge, TextField, Button} from  '@mui/material';
+import { Grid, Box, Typography, Avatar, Chip, Skeleton, Paper, Stack, Badge, TextField, Button, Divider} from  '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import IconButton from '@mui/material/IconButton';
@@ -29,6 +29,9 @@ import {
 
 const Post = () => {
 
+  // Retrieving user Info from local Storage
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const imagesListRef = ref(storage, "images/");
   const msg = new SpeechSynthesisUtterance();
 
@@ -43,7 +46,7 @@ const Post = () => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
 
-  const [comment, setComment] = useState({data:"",name:"",img:""});
+  const [comment, setComment] = useState({data:"",name:"",img:"",email:"",date:""});
   const [clicked, setClicked] = useState(false);
   const [comments, setComments] = useState([]);
   const { id } = useParams();
@@ -104,7 +107,9 @@ const Post = () => {
 
   // Handle user's Input for posts's Comment
   const handleComment = (event) => {
-    setComment({data:event.target.value,name:post.author.name, img:post.author.image});
+    setComment({data:event.target.value,name:user.name, img:user.photo,email:user.email,
+    date:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})
+    });
   };
   
   const submitHandler = () => {
@@ -118,15 +123,11 @@ const Post = () => {
       setClicked(false);
       updateDoc(doc(db,"posts",id),{comments:[...post.comments,...comments]});
     }
-    setComment({data:"", name:"",img:""});
+    setComment({data:"",name:"",img:"",email:"",date:""});
   },[id,clicked,comments]);
 
     console.log("comments:",comments);
 
-    // useEffect(()=>{
-    //   updateDoc(doc(db,"posts",id),{comments:[...comments]});
-
-    // },[id,comments])
     // Handle Likes
     const handleLiked = () => {
       setDisablelike(true);
@@ -193,8 +194,14 @@ const Post = () => {
     msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name === 'Samantha'})[0];
   }, [msg])
   
-  // Retrieving user Info from local Storage
-  const user = JSON.parse(localStorage.getItem('user'));
+  // Delete the Comment when clicked
+  const handleCommentDelete = (event) => {
+    event.preventDefault();
+    // deleteDoc(doc(db, "posts", id),{comments:[]}).then(()=>{
+    //   navigate('/home')
+    // })
+  }
+
 
   // Delete the post when clicked
   const handlePostDelete = (event) => {
@@ -219,7 +226,7 @@ const Post = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Paper elevation={3} sx={{width:'70%', marginTop:15, marginBottom:5, backgroundColor:"#FFFFFF"}}>
+        <Paper elevation={3} sx={{width:'70%', marginTop:15, backgroundColor:"#FFFFFF"}}>
         <Box
           component="form"
           display="flex"
@@ -420,10 +427,44 @@ const Post = () => {
           
         </Box>
         </Paper>
+        {/* <Typography fontSize={20} fontFamily="'Snowburst One', cursive">{comment.data}</Typography> */}
         <Paper elevation={3} sx={{width:'70%', marginTop:5, marginBottom:5, backgroundColor:"#FFFFFF"}}>
+        <Grid container display='flex' direction='column' alignitems='center' justifycontent='center' wrap="nowrap" spacing={2} sx={{padding:5}}>
         {post.comments.map((comment)=>{
-            return (<Typography fontSize={20} fontFamily="'Snowburst One', cursive">{comment.data}</Typography>)
+            return (
+              <Grid sx={{padding:1}}>
+              <Grid container display='flex' direction='row' alignItems='center' justifyContent='space-between' sx={{marginTop:1,marginBottom:1}}>
+              <Chip
+                avatar={<Avatar alt={comment.name} src={comment.img} />}
+                label={<Typography fontSize={16} fontFamily="'Raleway', sans-serif" sx={{ textAlign: "left"}}>{comment.name}</Typography>}
+                variant="outlined"
+              />
+              {comment.email === user.email  ? <Tooltip title="Delete" placement="right">
+              <IconButton aria-label="delete"  onClick ={handleCommentDelete} sx={{color:"#DC3545"}}>
+                <DeleteIcon/>
+              </IconButton>
+              </Tooltip>
+              // : <Skeleton animation="wave" variant="circular" width={25} height={25} />
+               : 
+                <div style={{width:25 ,height:25}}></div>
+              }
+              </Grid>
+
+              <Grid container display='flex' direction='column' alignItems='center' alignContent='flex-start' sx={{marginTop:1,marginBottom:1}}>
+                <Typography fontSize={20} fontFamily="'Snowburst One', cursive">
+                  {comment.data}
+                </Typography>
+              </Grid>
+              <Grid container display='flex' direction='column' alignItems='center' alignContent='flex-start' sx={{marginTop:1,marginBottom:1}}>
+                <Typography textAlign='start' fontFamily="'Raleway', sans-serif" sx={{color: "gray" }}>
+                  {comment.date}
+                </Typography>
+              </Grid>
+              <Divider variant="fullWidth"/>
+              </Grid>
+            );
           })}
+        </Grid>
         </Paper>
       </Grid>
     </Grid>
