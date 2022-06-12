@@ -67,7 +67,7 @@ const Home = () => {
     setOpen(true);
     setTimeout(()=>{
       setOpen(false);
-    },1000)
+    },2000)
   };
 
   useEffect(()=>{
