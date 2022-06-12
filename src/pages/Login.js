@@ -94,7 +94,7 @@ const Login = () => {
           StoryBook 
         </Typography>
         <Typography variant="h6" noWrap component="div" fontSize={25} fontFamily="'Snowburst One', cursive">
-          Discover amazing children stories 
+          Discover amazing short stories for kids 
         </Typography>
         <Avatar
           alt="Google Logo"

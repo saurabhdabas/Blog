@@ -48,7 +48,7 @@ const Post = () => {
   const [disliked, setDisliked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
-  
+  const [showButton, setShowButton] = useState(false);
   const [comment, setComment] = useState({data:"",name:"",img:"",email:"",date:""});
   const [clicked, setClicked] = useState(false);
   const [comments, setComments] = useState([]);
@@ -80,38 +80,50 @@ const Post = () => {
       });
     },[post])
     
-    useEffect(()=>{
-      
-      getDoc(doc(db, "posts", id))
-      .then((response)=>{
-        console.log("data:",response.data());
-        setPost((prevValue)=>({
-          ...prevValue,
-          title:response.data().title,
-          publishDate:response.data().publishDate,
-          content:response.data().content,
-          img:response.data().imageSrc,
-          likes:response.data().likes,
-          dislikes:response.data().dislikes,
-          comments:response.data().comments,
-          author:{
-            email:response.data().author.email,
-            id:response.data().author.id,
-            image:response.data().author.img,
-            name:response.data().author.name,
-          }
-          })
-        )
-      })
-      setTimeout(()=>{
-        setIsLoading(true)
-      },3300)
-  
-    },[likes,dislikes,comments,del])
+  useEffect(()=>{
+    
+    getDoc(doc(db, "posts", id))
+    .then((response)=>{
+      console.log("data:",response.data());
+      setPost((prevValue)=>({
+        ...prevValue,
+        title:response.data().title,
+        publishDate:response.data().publishDate,
+        content:response.data().content,
+        img:response.data().imageSrc,
+        likes:response.data().likes,
+        dislikes:response.data().dislikes,
+        comments:response.data().comments,
+        author:{
+          email:response.data().author.email,
+          id:response.data().author.id,
+          image:response.data().author.img,
+          name:response.data().author.name,
+        }
+        })
+      )
+    })
+    setTimeout(()=>{
+      setIsLoading(true)
+    },3300)
 
+  },[likes,dislikes,comments,del])
+
+  // The back-to-top button is hidden at the beginning
+  
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset > 300) {
+        setShowButton(true);
+      } else {
+        setShowButton(false);
+      }
+    });
+  }, []);
+  
   // Handle user's Input for posts's Comment
   const handleComment = (event) => {
-    console.log("user.id:",user.id);
+    
     setComment({data:event.target.value,name:user.name, img:user.photo,email:user.email,
     date:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})
     });
@@ -133,26 +145,26 @@ const Post = () => {
 
     
 
-    // Handle Likes
-    const handleLiked = () => {
-      setDisablelike(true);
-      setLiked(true);
-      setLikes((likes)=>likes+1);
-    }
-    useEffect(()=>{
-      if(liked){
-        setLiked(false);
-        if(!post.likes){
-          updateDoc(doc(db,"posts",id),{
-            likes:likes,
-          })
-        } else {
-          updateDoc(doc(db,"posts",id),{
-            likes:post.likes + likes,
-          })
-        }
+  // Handle Likes
+  const handleLiked = () => {
+    setDisablelike(true);
+    setLiked(true);
+    setLikes((likes)=>likes+1);
+  }
+  useEffect(()=>{
+    if(liked){
+      setLiked(false);
+      if(!post.likes){
+        updateDoc(doc(db,"posts",id),{
+          likes:likes,
+        })
+      } else {
+        updateDoc(doc(db,"posts",id),{
+          likes:post.likes + likes,
+        })
       }
-    },[id,liked,likes])
+    }
+  },[id,liked,likes])
 
   // Handle Dislikes
   const handleDisliked = () => {
@@ -211,7 +223,7 @@ const Post = () => {
     })
   }
   useEffect(()=>{
-    console.log("del:",del)
+    
     if(del){
 
       if(post.comments.length && user.email) {
@@ -242,6 +254,13 @@ const Post = () => {
   const handleNavigation = () => {
     navigate(-1);
   }
+  // Handle Scroll to top
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // for smoothly scrolling
+    });
+  };
 
   return (
     <Grid sx={{backgroundColor:"#F6F6F6", minHeight:"100vh", backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}>
@@ -504,8 +523,11 @@ const Post = () => {
         </Paper>
         : <div></div>
         }
-        <ArrowCircleUpIcon sx={{ m: 1, width: 50 , height: 100, color:"#1976d2"}}/>
-
+        <Tooltip title="scroll to top" placement="top">
+          <IconButton aria-label="Top" onClick={scrollToTop} sx={{position:'relative', bottom:"25px"}}>
+            <ArrowCircleUpIcon sx={{ m: 1, width: 70 , height: 70, color:"#FF3131"}}/>     
+          </IconButton>
+        </Tooltip>
       </Grid>
     </Grid>
   );
