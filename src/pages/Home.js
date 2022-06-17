@@ -67,7 +67,7 @@ const Home = () => {
     setOpen(true);
     setTimeout(()=>{
       setOpen(false);
-    },2000)
+    },1000)
   };
 
   useEffect(()=>{
@@ -133,6 +133,7 @@ const Home = () => {
             component="img"
             height="200"
             image={post.url}
+            loading='lazy'
             alt={post.title}
             sx={{padding:'16px'}}
           />
