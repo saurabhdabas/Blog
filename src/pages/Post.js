@@ -107,7 +107,7 @@ const Post = () => {
       setIsLoading(true)
     },3300)
 
-  },[likes,dislikes,comments,del])
+  },[likes,dislikes,comments,del,clicked])
 
   // The back-to-top button is hidden at the beginning
   
@@ -135,6 +135,7 @@ const Post = () => {
       setComments([comment]);
     }
   }
+  
   useEffect(() =>{
     if(clicked){
       setClicked(false);
