@@ -1,4 +1,5 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect } from 'react';
+import { ThreeDots } from 'react-loader-spinner';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
@@ -171,7 +172,7 @@ const Home = () => {
     <Grid style={{ minHeight: '100vh', backgroundColor: "#F6F6F6" ,backgroundImage:"url('/back1.webp')", backgroundRepeat:'no-repeat', backgroundSize:'cover'}}>
       <Navbar/>
       <Box sx={{ display: 'grid',gap: 2, gridTemplateColumns: 'repeat(3, 1fr)', paddingTop:15,  paddingLeft:25, paddingRight:25 ,paddingBottom:15, minHeight: '100vh', justifyItems:'center'}} >
-        {posts}
+        {isLoading ? posts : <ThreeDots color="rgba(0, 0, 0, 0.87)"  height={250} width={1200} />}
       </Box>
     </Grid>
   )
