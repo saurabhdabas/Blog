@@ -216,7 +216,6 @@ const Post = () => {
   // Delete the Comment when clicked
   const handleCommentDelete = () => {
     setDel(true);
-    
   }
   const findCommentByEmail = (arr,email) => {
    return arr.filter((comment)=>{
@@ -240,7 +239,7 @@ const Post = () => {
       }
 
     }
-  },[del])
+  },[del,comments])
 
   // Delete the post when clicked
   const handlePostDelete = (event) => {
