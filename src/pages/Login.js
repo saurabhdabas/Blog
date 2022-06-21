@@ -112,7 +112,7 @@ const Login = () => {
         onClick={submitHandler}>
         <Avatar
           alt="Google Logo"
-          src="google.png"
+          src="https://fundanisa.com/wp-content/uploads/2020/05/logo1.jpg"
         />
           <Typography marginLeft={2} fontFamily="'Raleway', sans-serif">
             Sign In With Google
