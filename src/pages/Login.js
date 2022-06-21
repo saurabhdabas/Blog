@@ -73,7 +73,7 @@ const Login = () => {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ minHeight: '100vh', backgroundColor:"#FFFFFF",backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover'}}
+      style={{ minHeight: '100vh', backgroundColor:"#FFFFFF",backgroundImage:"url('/back1.webp')", backgroundRepeat:'no-repeat', backgroundSize:'cover'}}
     >
       <Box
         component="form"

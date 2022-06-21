@@ -108,7 +108,7 @@ function CreatePost() {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        style={{ minHeight: '100vh', backgroundColor: "#F6F6F6", backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}
+        style={{ minHeight: '100vh', backgroundColor: "#F6F6F6", backgroundImage:"url('/back1.webp')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}
       >
         <Paper elevation={3} 
           sx={{width:900, marginTop:15, marginBottom:10, backgroundColor:"#FFFFFF",borderRadius:5}}>

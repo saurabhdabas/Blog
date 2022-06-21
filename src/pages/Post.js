@@ -263,7 +263,7 @@ const Post = () => {
   };
 
   return (
-    <Grid sx={{backgroundColor:"#F6F6F6", minHeight:"100vh", backgroundImage:"url('/background.jpeg')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}>
+    <Grid sx={{backgroundColor:"#F6F6F6", minHeight:"100vh", backgroundImage:"url('/back1.webp')", backgroundRepeat:'no-repeat', backgroundSize:'cover' }}>
       <Navbar/>
       <Grid
         container
