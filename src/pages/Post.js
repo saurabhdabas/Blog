@@ -130,18 +130,19 @@ const Post = () => {
   };
   
   const submitHandler = () => {
-    if(comment){
+    if(comment.data){
       setClicked(true);
-      setComments([comment]);
+      setComments((prev)=>([...prev,comment]));
+      setComment({data:"",name:"",img:"",email:"",date:""});
     }
   }
   
   useEffect(() =>{
     if(clicked){
       setClicked(false);
-      updateDoc(doc(db,"posts",id),{comments:[...post.comments,...comments]});
+      updateDoc(doc(db,"posts",id),{comments:[...comments]});
     }
-    setComment({data:"",name:"",img:"",email:"",date:""});
+    
   },[id,clicked,comments]);
 
     
@@ -228,18 +229,13 @@ const Post = () => {
 
       if(post.comments.length && user.email) {
 
-        const result = findCommentByEmail(post.comments,user.email);
-        const key = result[0]
-        console.log("result:",result);
-        console.log("Did It get deleted ??")
         updateDoc(doc(db,"posts",id), {
-          ["comments"]: arrayRemove({...result[0]})
-        });
-        setDel(false);
+          comments: arrayRemove({...findCommentByEmail(post.comments,user.email)[0]})
+        }).then(()=> setDel(false))
       }
 
     }
-  },[del,comments])
+  },[id,del,comments])
 
   // Delete the post when clicked
   const handlePostDelete = (event) => {

@@ -55,7 +55,7 @@ const Home = () => {
     })
     setTimeout(()=>{
       setIsLoading(true)
-    },1200)
+    },3000)
 
   },[])
   
