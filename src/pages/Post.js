@@ -107,7 +107,7 @@ const Post = () => {
       setIsLoading(true)
     },3300)
 
-  },[likes,dislikes,comments,del,clicked])
+  },[likes,dislikes,comments,comment,del,clicked])
 
   // The back-to-top button is hidden at the beginning
   
@@ -144,7 +144,7 @@ const Post = () => {
       setComment({data:"",name:"",img:"",email:"",date:""});
     }
     
-  },[id,clicked,comments]);
+  },[id,clicked,comment]);
 
     
 
