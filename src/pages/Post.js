@@ -132,15 +132,16 @@ const Post = () => {
   const submitHandler = () => {
     if(comment.data){
       setClicked(true);
-      setComments((prev)=>([...prev,comment]));
-      setComment({data:"",name:"",img:"",email:"",date:""});
+      setComment(comment)
     }
   }
-  
+
   useEffect(() =>{
     if(clicked){
+      console.log("post.comments:",post.comments);
       setClicked(false);
-      updateDoc(doc(db,"posts",id),{comments:[...comments]});
+      updateDoc(doc(db,"posts",id),{comments:[...post.comments,comment]});
+      setComment({data:"",name:"",img:"",email:"",date:""});
     }
     
   },[id,clicked,comments]);
