@@ -17,7 +17,7 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 
 import totalWords from '../helpers/Words';
-
+import { v4 } from 'uuid';
 import { db } from '../firebase-config';
 import { doc, getDoc, deleteDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { storage } from "../firebase-config";
@@ -49,10 +49,11 @@ const Post = () => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [showButton, setShowButton] = useState(false);
-  const [comment, setComment] = useState({data:"",name:"",img:"",email:"",date:""});
+  const [comment, setComment] = useState({data:"",name:"",img:"",email:"",date:"",id:""});
   const [clicked, setClicked] = useState(false);
   const [comments, setComments] = useState([]);
   const [del,setDel] = useState(false);
+  const [itemToBeDeleted, setItemToBeDeleted] = useState([]);
   const { id } = useParams();
   
   const [post, setPost] = useState({
@@ -107,7 +108,7 @@ const Post = () => {
       setIsLoading(true)
     },3300)
 
-  },[likes,dislikes,comments,comment,del,clicked])
+  },[id,likes,dislikes,comments,comment,del,clicked])
 
   // The back-to-top button is hidden at the beginning
   
@@ -125,7 +126,7 @@ const Post = () => {
   const handleComment = (event) => {
     
     setComment({data:event.target.value,name:user.name, img:user.photo,email:user.email,
-    date:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"})
+    date:new Date().toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric"}),id:v4()
     });
   };
   
@@ -141,10 +142,10 @@ const Post = () => {
       console.log("post.comments:",post.comments);
       setClicked(false);
       updateDoc(doc(db,"posts",id),{comments:[...post.comments,comment]});
-      setComment({data:"",name:"",img:"",email:"",date:""});
+      setComment({data:"",name:"",img:"",email:"",date:"",id:""});
     }
     
-  },[id,clicked,comment]);
+  },[id,clicked,comment,post.comments]);
 
     
 
@@ -214,29 +215,32 @@ const Post = () => {
     msg.voice = window.speechSynthesis.getVoices().filter(function(voice) { return voice.name === 'Samantha'})[0];
   }, [msg])
   
-  
+  const findCommentById = (arr,item) => {
+    return arr.filter((comment)=>{
+       return comment.id === item
+     })
+  }
   // Delete the Comment when clicked
-  const handleCommentDelete = () => {
+  const handleCommentDelete = (event) => {
     setDel(true);
+    const item = event.currentTarget.value;
+    setItemToBeDeleted(findCommentById(post.comments,item)[0]);
   }
-  const findCommentByEmail = (arr,email) => {
-   return arr.filter((comment)=>{
-      return comment.email === email
-    })
-  }
+
+  
   useEffect(()=>{
     
     if(del){
 
-      if(post.comments.length && user.email) {
-
+      if(post.comments.length && user.email ) {
+        console.log("itemToBeDeleted:",itemToBeDeleted);
         updateDoc(doc(db,"posts",id), {
-          comments: arrayRemove({...findCommentByEmail(post.comments,user.email)[0]})
+          comments: arrayRemove({...itemToBeDeleted})
         }).then(()=> setDel(false))
       }
 
     }
-  },[id,del,comments])
+  },[id,del,itemToBeDeleted,comments])
 
   // Delete the post when clicked
   const handlePostDelete = (event) => {
@@ -495,7 +499,7 @@ const Post = () => {
                 variant="outlined"
               />
               {comment.email === user.email  && <Tooltip title="Delete" placement="right">
-              <IconButton aria-label="delete"  onClick ={handleCommentDelete} sx={{color:"#DC3545"}}>
+              <IconButton aria-label="delete" value={comment.id} onClick ={handleCommentDelete} sx={{color:"#DC3545"}}>
                 <DeleteIcon/>
               </IconButton>
               </Tooltip> 

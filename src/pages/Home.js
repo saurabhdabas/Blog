@@ -86,7 +86,7 @@ const Home = () => {
         });
       });
     });
-  },[postsList])
+  },[imagesListRef,postsList])
 
   let navigate = useNavigate();
   
